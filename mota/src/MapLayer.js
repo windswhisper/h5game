@@ -33,7 +33,7 @@ var MapTile = cc.Node.extend({
 		switch(type)
 		{
 		case GROUND_TYPE.FLOOR:
-			this.sp = cc.Sprite.create("res/Floor.png");
+			this.sp = cc.Sprite.create("res/floor.png");
 			break;
 		case GROUND_TYPE.WALL:
 			this.sp = cc.Sprite.create("res/wall.png");

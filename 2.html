@@ -1,0 +1,25 @@
+
+<html>
+	<head>
+		<title>game</title>
+		<script>
+		function Client(ws){
+			this.wsconnect = ws;
+			this.setid = function(id){this.id = id};
+			this.join = function(op){this.op = op};
+			this.onmsg = function(msg){this.op.send(msg)};
+		}
+		window.onload = function()
+		{
+			var c = new Client(1,2);
+			c.join(123);
+			alert(c.op);
+		}
+		</script>
+	</head>
+	<body>
+		<div id="me" >
+			o
+		</div>
+	</body>
+</html>

@@ -1,0 +1,50 @@
+
+<html>
+	<head>
+		<title>在线聊天</title>
+		<script>
+		var nameList = new Array("少女","英雄","国王","骑士","王后","法师","学者","诗人","猎人","先知","侠客","神","无名");
+		var n = Math.floor(Math.random()*13);
+		var name = nameList[n];
+		var socket = new WebSocket('ws://111.206.45.12:30324');
+		socket.onopen = function(event) { 
+
+		  // 发送一个初始化消息
+		  // 监听消息
+			socket.onmessage = function(result,nTime){
+				var para=document.createElement("p");
+				para.innerText = result.data;
+				document.getElementById("msg").appendChild(para);
+			}
+
+		  // 监听Socket的关闭
+		  socket.onclose = function(event) { 
+			console.log('Client notified socket has closed',event); 
+		  }; 
+
+		  // 关闭Socket.... 
+		  //socket.close() 
+		};
+		window.document.onkeydown = disableRefresh;
+		function disableRefresh(evt){
+			evt = (evt) ? evt : window.event
+			if (evt.keyCode) {
+			   if(evt.keyCode == 13){
+				 send();
+			   }
+			}
+		}
+		function send(){
+			socket.send(name+':'+document.getElementById('input').value);
+			document.getElementById('input').value='';
+		}
+		</script>
+	</head>
+	<body>
+		<div id="msg">
+			
+		</div>
+		<input type = "text" id = "input">
+		<button onclick="send()">Send</button>
+	</body>
+</html>

@@ -14,6 +14,10 @@ var GameLayer = cc.Layer.extend({
 	{
 		this._super();
 
+		var bg = new cc.LayerColor(cc.color(91,12,170,255));
+		bg.setScale(100);
+		this.addChild(bg);
+
 		for(var i=0;i<BOARD_SIZE.width;i++)
 		{
 			this.beansArray[i] = new Array();
@@ -122,7 +126,7 @@ var Bean = cc.Sprite.extend({
 	{
 		this._super(picName);
 		this.setScale(0);
-		this.runAction(new cc.Sequence(new cc.DelayTime(0.8),new cc.ScaleTo(0.2,1)));
+		this.runAction(new cc.Sequence(new cc.DelayTime(0.8),new cc.ScaleTo(0.2,0.6)));
 	},
 	hit:function()
 	{

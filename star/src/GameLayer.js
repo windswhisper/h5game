@@ -49,7 +49,7 @@ var GameLayer = cc.Layer.extend({
 	},
 	putBall:function(x,y)
 	{
-		this.beansArray[x][y] = Math.floor(Math.random()*4)+1;
+		this.beansArray[x][y] = Math.floor(Math.random()*6)+1;
 		this.spriteArray[x][y] = new Bean("res/"+this.beansArray[x][y]+".png");
 		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height);
 		this.boardNode.addChild(this.spriteArray[x][y]);

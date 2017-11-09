@@ -185,7 +185,7 @@ var GameLayer = cc.Layer.extend({
 		    	}
 
 			if(this.combo>=2)
-		    	switch(this.count)
+		    	switch(this.combo)
 		    	{
 		    		case 2:
 			    		cc.audioEngine.playEffect("res/music/combo_2.mp3");

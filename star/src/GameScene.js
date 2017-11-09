@@ -9,7 +9,7 @@ var GameScene = cc.Scene.extend({
 	},
 	adaptScreen:function()
 	{
-	 	cc.view.setDesignResolutionSize(540,960,cc.ResolutionPolicy.NO_BORDER);
+	 	cc.view.setDesignResolutionSize(1080,1920,cc.ResolutionPolicy.NO_BORDER);
 
 		var size = cc.director.getWinSize();
         var visibleSize = cc.view.getVisibleSize();
@@ -17,9 +17,5 @@ var GameScene = cc.Scene.extend({
         this.setAnchorPoint(0, 0);
         this.setScale(visibleSize.height/size.height);
 
-        var rect = cc.DrawNode.create();
-        rect.drawRect(cc.p(2,2),cc.p(538,958));
-        rect.setPosition(0,0);
-        this.addChild(rect);
 	}
 });

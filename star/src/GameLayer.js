@@ -184,6 +184,25 @@ var GameLayer = cc.Layer.extend({
 			    		break;
 		    	}
 
+			if(this.combo>=2)
+		    	switch(this.count)
+		    	{
+		    		case 2:
+			    		cc.audioEngine.playEffect("res/music/combo_2.mp3");
+			    		break;
+		    		case 3:
+			    		cc.audioEngine.playEffect("res/music/combo_3.mp3");
+			    		break;
+		    		case 4:
+			    		cc.audioEngine.playEffect("res/music/combo_4.mp3");
+			    		break;
+		    		case 5:
+			    		cc.audioEngine.playEffect("res/music/combo_5.mp3");
+			    		break;
+		    		default:
+			    		cc.audioEngine.playEffect("res/music/combo_6.mp3");
+			    		break;
+		    	}
 		    this.power+=0.01*this.count;
 		    if(this.power>1)this.power=1;
 		    this.updatePowerBar();

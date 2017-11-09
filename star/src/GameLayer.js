@@ -50,11 +50,11 @@ var GameLayer = cc.Layer.extend({
 		topBar.setPosition(540,1827);
 		topView.addChild(topBar);
 
-		this.scoreLabel = new cc.LabelTTF("10000","",80);
+		this.scoreLabel = new cc.LabelTTF("0","",80);
 		this.scoreLabel.setPosition(540,1870);
 		topView.addChild(this.scoreLabel);
 
-		this.comboLabel = new cc.LabelTTF("x2","",80);
+		this.comboLabel = new cc.LabelTTF("x0","",80);
 		this.comboLabel.setPosition(150,1870);
 		topView.addChild(this.comboLabel);
 
@@ -76,6 +76,10 @@ var GameLayer = cc.Layer.extend({
 		this.progressBar.setPosition(540,140);
 		bottomView.addChild(this.progressBar); 
 		this.updatePowerBar(0.5);
+
+		this.btnPause = new cc.Sprite("res/btn_pause.png");
+		this.btnPause.setPosition(130,140);
+		bottomView.addChild(this.btnPause);
 
         cc.eventManager.addListener({
           event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -179,6 +183,13 @@ var GameLayer = cc.Layer.extend({
 			    		cc.audioEngine.playEffect("res/music/hit_6.mp3");
 			    		break;
 		    	}
+
+		    this.power+=0.01*this.count;
+		    if(this.power>1)this.power=1;
+		    this.updatePowerBar();
+
+		    this.score+=10*this.count;
+		    this.updateScore();
     	}
     },
     countNear:function(x,y){

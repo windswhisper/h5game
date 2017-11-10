@@ -109,7 +109,12 @@ var GameLayer = cc.Layer.extend({
 	{
 		this.power-=dt/20;
 		this.updatePowerBar(this.power);
-	},
+		if(this.power<0)
+		{
+			alert("能量耗尽，胜败乃兵家常事，请英雄再来一次吧");
+			this.unscheduleUpdate();
+		}
+	}
 
 	newGame:function()
 	{
@@ -123,7 +128,7 @@ var GameLayer = cc.Layer.extend({
 	},
 	putBall:function(x,y)
 	{
-		this.beansArray[x][y] = Math.floor(Math.random()*4)+1;
+		this.beansArray[x][y] = Math.floor(Math.random()*arv(COLOR_LEVEL,this.level))+1;
 		this.spriteArray[x][y] = new Bean("res/playpage_chess_"+this.beansArray[x][y]+".png");
 		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height);
 		this.boardNode.addChild(this.spriteArray[x][y]);

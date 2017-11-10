@@ -1,5 +1,20 @@
 var BOARD_SIZE = cc.size(7,9);
 var BLOCK_SIZE = cc.size(144,144);
+
+var SCORE_PER_BLOCK = 2;
+var POWER_PER_BLOCK = 0.02;
+var SCORE_LEVEL = [100,500,2000,4000,8000,12000,15000,20000,25000,32000,40000,50000,75000,100000];
+var SCORE_RATE_LEVEL = [1,2,5,10,20,50,80,100,150,200,240,240,300,400];
+var POWER_RATE_LEVEL = [1,1,0.5,0.5,0.5,3,3,2,2,4,4,3,3,3,3,3,2.5];
+var COLOR_LEVEL = [3,4,4,4,4,5,5,5,5,6];
+var COMBO_RATE = [1,1,1.2,1.5,1.8,2.0];
+var SCORE_EXTRA = [0,0,0,0,10,10,10,10,20,20,50];
+
+function arv(arr,index)
+{
+	if(index>=arr.length)index = arr.length-1;
+	return arr[index];
+}
 function inRange(x,y)
 {
 	return x<=BOARD_SIZE.width-1&&x>=0&&y<=BOARD_SIZE.height-1&&y>=0;
@@ -50,15 +65,15 @@ var GameLayer = cc.Layer.extend({
 		topBar.setPosition(540,1827);
 		topView.addChild(topBar);
 
-		this.scoreLabel = new cc.LabelTTF("0","",80);
+		this.scoreLabel = new FontPng(75,0);
 		this.scoreLabel.setPosition(540,1870);
 		topView.addChild(this.scoreLabel);
 
-		this.comboLabel = new cc.LabelTTF("x0","",80);
+		this.comboLabel = new FontPng(75,"X0");
 		this.comboLabel.setPosition(150,1870);
 		topView.addChild(this.comboLabel);
 
-		this.levelLabel = new cc.LabelTTF("1","",80);
+		this.levelLabel = new FontPng(75,1);
 		this.levelLabel.setPosition(930,1870);
 		topView.addChild(this.levelLabel);
 
@@ -92,7 +107,7 @@ var GameLayer = cc.Layer.extend({
 	},
 	update:function(dt)
 	{
-		this.power-=dt/10;
+		this.power-=dt/20;
 		this.updatePowerBar(this.power);
 	},
 
@@ -203,12 +218,12 @@ var GameLayer = cc.Layer.extend({
 			    		cc.audioEngine.playEffect("res/music/combo_6.mp3");
 			    		break;
 		    	}
-		    this.power+=0.01*this.count;
+		    this.power+=this.count*arv(POWER_RATE_LEVEL,this.level)*POWER_PER_BLOCK;
 		    if(this.power>1)this.power=1;
 		    this.updatePowerBar();
 
-		    this.score+=10*this.count;
-		    this.updateScore();
+		    var s = (SCORE_PER_BLOCK*this.count*arv(COMBO_RATE,this.combo) + arv(SCORE_EXTRA,this.count))*arv(SCORE_RATE_LEVEL,this.level);
+		    this.getScore(s);
     	}
     },
     countNear:function(x,y){
@@ -235,18 +250,29 @@ var GameLayer = cc.Layer.extend({
     getCombo:function()
     {
     	this.combo++;
-    	this.comboLabel.setString("x"+this.combo);
+    	this.comboLabel.setString("X"+this.combo);
     },
     clearCombo:function()
     {
     	this.combo=0;
-    	this.comboLabel.setString("x"+this.combo);
+    	this.comboLabel.setString("X"+this.combo);
     },
     updatePowerBar:function(power)
     {
 		this.progressBar.setPosition(540,140);
 		this.progressBar.setTextureRect(cc.rect(829*(1-power),0,828,105));
     },
+    getScore:function(s)
+    {
+    	this.score+=Math.floor(s);
+    	this.updateScore();
+    	if(this.level<15&&this.score>SCORE_LEVEL[this.level])this.levelUp();
+    },
+	levelUp:function()
+	{
+		this.level++;
+		this.levelLabel.setString(this.level);
+	},
     updateScore:function()
     {
     	this.scoreLabel.setString(this.score);;

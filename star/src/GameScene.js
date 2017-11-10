@@ -1,11 +1,18 @@
 var GameScene = cc.Scene.extend({
 	ctor:function()
 	{
+		var _gameScene = this;
+
 		this._super();
 
 		this.addChild(new GameLayer());
 
 		this.adaptScreen();
+
+		window.onresize = function()
+		{
+			_gameScene.adaptScreen();
+		}
 	},
 	adaptScreen:function()
 	{

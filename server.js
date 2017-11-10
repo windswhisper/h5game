@@ -48,8 +48,6 @@ var http = require('http');
 var fs   = require("fs");
 
 http.createServer(function (request, response) {
-
-  console.log('http req');
   // 发送 HTTP 头部 
   // HTTP 状态值: 200 : OK
   // 内容类型: text/plain

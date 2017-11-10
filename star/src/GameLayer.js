@@ -114,7 +114,7 @@ var GameLayer = cc.Layer.extend({
 			alert("能量耗尽，胜败乃兵家常事，请英雄再来一次吧");
 			this.unscheduleUpdate();
 		}
-	}
+	},
 
 	newGame:function()
 	{

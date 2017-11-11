@@ -9,7 +9,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.bg.setPosition(540,960);
 
-		this.bg.setScale(1.2);
+		this.bg.setScale(1.3);
 
 		this.addChild(this.bg);
 
@@ -32,6 +32,8 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.mainBg.setPosition(540,960);
 
+		this.mainBg.setScale(1.3);
+		
 		this.mainBg.setOpacity(0);
 
 		this.mainBg.runAction(new cc.FadeTo(1,255));

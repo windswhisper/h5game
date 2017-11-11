@@ -5,7 +5,7 @@ var GameScene = cc.Scene.extend({
 
 		this._super();
 
-		this.addChild(new GameLayer());
+		this.addChild(new LoadingLayer());
 
 		this.adaptScreen();
 

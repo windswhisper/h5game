@@ -131,8 +131,15 @@ var GameLayer = cc.Layer.extend({
 		this.spriteArray[x][y] = new Bean(this.beansArray[x][y]);
 		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height+BOARD_SIZE.height*BLOCK_SIZE.height);
 		this.spriteArray[x][y].setOpacity(0);
-		this.spriteArray[x][y].runAction(new cc.Sequence(new cc.DelayTime(0.5-0.5*(BOARD_SIZE.height-y)/BOARD_SIZE.height),new cc.FadeTo(0.1,255)));
-		this.spriteArray[x][y].runAction(new cc.MoveBy(0.5,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height)));
+		this.spriteArray[x][y].runAction(new cc.Sequence(
+			new cc.DelayTime(0.5-0.5*(BOARD_SIZE.height-y)/BOARD_SIZE.height),
+			new cc.FadeTo(0.1,255)
+			));
+		this.spriteArray[x][y].runAction(new cc.Sequence(
+			new cc.EaseQuadraticActionIn(new cc.MoveBy(0.5,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
+			new cc.MoveBy(0.03,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
+			new cc.MoveBy(0.07,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
+			));
 		this.boardNode.addChild(this.spriteArray[x][y]);
 	},
     onTouchBegan:function(touch, event) 
@@ -202,7 +209,12 @@ var GameLayer = cc.Layer.extend({
 					{
 						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
 						this.beansArray[i][j]=0;
-						this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime(0.5-0.5*this.countTempArray[i][j]/BOARD_SIZE.height),new cc.MoveBy(0.5*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))));
+						this.spriteArray[i][j].runAction(new cc.Sequence(
+							new cc.DelayTime(0.5-0.5*this.countTempArray[i][j]/BOARD_SIZE.height),
+							new cc.EaseQuadraticActionIn(new cc.MoveBy(0.5*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
+							new cc.MoveBy(0.03,cc.p(0,-20*(BOARD_SIZE.height-j)/BOARD_SIZE.height)),
+							new cc.MoveBy(0.07,cc.p(0,20*(BOARD_SIZE.height-j)/BOARD_SIZE.height))
+							));
 						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
 
 					}

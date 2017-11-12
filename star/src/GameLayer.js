@@ -129,7 +129,10 @@ var GameLayer = cc.Layer.extend({
 	{
 		this.beansArray[x][y] = Math.floor(Math.random()*arv(COLOR_LEVEL,this.level))+1;
 		this.spriteArray[x][y] = new Bean(this.beansArray[x][y]);
-		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height);
+		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height+BOARD_SIZE.height*BLOCK_SIZE.height);
+		this.spriteArray[x][y].setOpacity(0);
+		this.spriteArray[x][y].runAction(new cc.Sequence(new cc.DelayTime(0.5-0.5*(BOARD_SIZE.height-y)/BOARD_SIZE.height),new cc.FadeTo(0.1,255)));
+		this.spriteArray[x][y].runAction(new cc.MoveBy(0.5,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height)));
 		this.boardNode.addChild(this.spriteArray[x][y]);
 	},
     onTouchBegan:function(touch, event) 
@@ -172,8 +175,47 @@ var GameLayer = cc.Layer.extend({
 	    			if(this.countTempArray[i][j] != 0)
 	    				{
 	    					this.hitBean(i,j);
+	    					//this.putBall(i,j);
+	    				}
+
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+				for(var j=0;j<BOARD_SIZE.height;j++)
+	    			this.countTempArray[i][j] = 0;
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+				for(var j=0;j<BOARD_SIZE.height;j++)
+				{
+					if(this.beansArray[i][j]==0)
+					{
+						for(var k=j+1;k<BOARD_SIZE.height;k++)
+						{
+							this.countTempArray[i][k]++;
+						}
+					}
+				}
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+				for(var j=0;j<BOARD_SIZE.height;j++)
+				{
+					if(this.beansArray[i][j]!=0&&this.countTempArray[i][j]!=0)
+					{
+						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
+						this.beansArray[i][j]=0;
+						this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime(0.5-0.5*this.countTempArray[i][j]/BOARD_SIZE.height),new cc.MoveBy(0.5*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))));
+						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
+
+					}
+				}
+
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+				for(var j=0;j<BOARD_SIZE.height;j++)
+	    			if(this.beansArray[i][j] == 0)
+	    				{
 	    					this.putBall(i,j);
 	    				}
+
 
 	    	if(this.count>=3){
 	    		this.getCombo();
@@ -290,8 +332,8 @@ var Bean = cc.Sprite.extend({
 	{
 		this.id = id;
 		this._super("res/playpage_chess_"+id+".png");
-		this.setScale(0);
-		this.runAction(new cc.Sequence(new cc.DelayTime(0.8),new cc.ScaleTo(0.2,1)));
+		//this.setScale(0);
+		//this.runAction(new cc.Sequence(new cc.DelayTime(0.8),new cc.ScaleTo(0.2,1)));
 	},
 	hit:function()
 	{

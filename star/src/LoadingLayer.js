@@ -20,6 +20,13 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.addChild(this.logo,1);
 
+		var progressBg = new cc.Sprite("res/playpage_progress_bg.png");
+		progressBg.setPosition(540,140);
+		this.addChild(progressBg); 
+
+		this.progressBar = new cc.Sprite("res/playpage_progress.png");
+		this.progressBar.setPosition(540,140);
+		this.addChild(this.progressBar); 
 
         var res = ["res/playpage_chess_1.png","res/playpage_chess_2.png","res/playpage_chess_3.png","res/playpage_chess_4.png","res/playpage_chess_5.png","res/playpage_chess_6.png"
         ,"res/Candy_1.png","res/Candy_2.png","res/Candy_3.png","res/Candy_4.png","res/Candy_5.png","res/Candy_6.png"
@@ -29,11 +36,16 @@ var LoadingLayer = cc.Layer.extend({
             function (result, count, loadedCount) {
                 var percent = (loadedCount / count * 100) | 0;
                 percent = Math.min(percent, 100);
-                console.log(percent);
+                _gameScene.updateProgressBar(percent/100);
             }, function () {
             	_gameScene.onLoaded();
             });
 	},
+    updateProgressBar:function(power)
+    {
+		this.progressBar.setPosition(540-829/2*(1-power),140);
+		this.progressBar.setTextureRect(cc.rect(829*(power),0,828,105));
+    },
 	onLoaded:function()
 	{
 		this.logo.runAction(new cc.EaseExponentialOut(new cc.MoveBy(2,cc.p(0,500))));

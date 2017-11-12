@@ -91,7 +91,6 @@ var GameLayer = cc.Layer.extend({
 		this.progressBar = new cc.Sprite("res/playpage_progress.png");
 		this.progressBar.setPosition(540,140);
 		bottomView.addChild(this.progressBar); 
-		this.updatePowerBar(0.5);
 
 		this.btnPause = new cc.Sprite("res/btn_pause.png");
 		this.btnPause.setPosition(130,140);

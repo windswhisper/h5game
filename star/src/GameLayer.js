@@ -130,7 +130,7 @@ var GameLayer = cc.Layer.extend({
 	putBall:function(x,y)
 	{
 		this.beansArray[x][y] = Math.floor(Math.random()*arv(COLOR_LEVEL,this.level))+1;
-		this.spriteArray[x][y] = new Bean("res/playpage_chess_"+this.beansArray[x][y]+".png");
+		this.spriteArray[x][y] = new Bean(this.beansArray[x][y]);
 		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height);
 		this.boardNode.addChild(this.spriteArray[x][y]);
 	},
@@ -286,14 +286,17 @@ var GameLayer = cc.Layer.extend({
 });
 
 var Bean = cc.Sprite.extend({
-	ctor:function(picName)
+	id:1,
+	ctor:function(id)
 	{
-		this._super(picName);
+		this.id = id;
+		this._super("res/playpage_chess_"+id+".png");
 		this.setScale(0);
 		this.runAction(new cc.Sequence(new cc.DelayTime(0.8),new cc.ScaleTo(0.2,1)));
 	},
 	hit:function()
 	{
+		this.setTexture("res/Candy_"+this.id+".png");
 		this.setZOrder(2);
 		this.vx = Math.random()*20-10;
 		this.vy = Math.random()*10+10;

@@ -20,9 +20,19 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.addChild(this.logo,1);
 
-		setTimeout(function(){
-			_gameScene.onLoaded();
-		},2000);
+
+        var res = ["res/playpage_chess_1.png","res/playpage_chess_2.png","res/playpage_chess_3.png","res/playpage_chess_4.png","res/playpage_chess_5.png","res/playpage_chess_6.png"
+        ,"res/Candy_1.png","res/Candy_2.png","res/Candy_3.png","res/Candy_4.png","res/Candy_5.png","res/Candy_6.png"
+        ,"res/btn_play.png","res/logo.png","res/main_bg.png","res/playpage_chessbg.png","res/playpage_Top.png","res/tile_shine.png","res/playpage_bg.png","res/btn_pause.png"
+        ,"res/font/0.png","res/font/1.png","res/font/2.png","res/font/3.png","res/font/4.png","res/font/5.png","res/font/6.png","res/font/7.png","res/font/8.png","res/font/9.png","res/font/X.png"];
+        cc.loader.load(res,
+            function (result, count, loadedCount) {
+                var percent = (loadedCount / count * 100) | 0;
+                percent = Math.min(percent, 100);
+                console.log(percent);
+            }, function () {
+            	_gameScene.onLoaded();
+            });
 	},
 	onLoaded:function()
 	{

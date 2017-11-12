@@ -40,22 +40,9 @@ var GameLayer = cc.Layer.extend({
 		bg.setPosition(540,960);
 		this.addChild(bg);
 
-
 		var bgBoard = new cc.Sprite("res/playpage_chessbg.png");
 		bgBoard.setPosition(540,960);
 		this.addChild(bgBoard);
-
-		for(var i=0;i<BOARD_SIZE.width;i++)
-		{
-			this.beansArray[i] = new Array();
-			this.spriteArray[i] = new Array();
-			this.countTempArray[i] = new Array();
-		}
-		this.boardNode = cc.Node.create();
-		this.boardNode.setPosition(106,380);
-		this.addChild(this.boardNode);
-		this.newGame();
-
 
 		var topView = new cc.Node();
 		topView.setPosition(0,200);
@@ -95,6 +82,18 @@ var GameLayer = cc.Layer.extend({
 		this.btnPause = new cc.Sprite("res/btn_pause.png");
 		this.btnPause.setPosition(130,140);
 		bottomView.addChild(this.btnPause);
+
+		for(var i=0;i<BOARD_SIZE.width;i++)
+		{
+			this.beansArray[i] = new Array();
+			this.spriteArray[i] = new Array();
+			this.countTempArray[i] = new Array();
+		}
+		this.boardNode = cc.Node.create();
+		this.boardNode.setPosition(106,380);
+		this.addChild(this.boardNode);
+		this.newGame();
+
 
         cc.eventManager.addListener({
           event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -285,6 +284,7 @@ var GameLayer = cc.Layer.extend({
 });
 
 var Bean = cc.Sprite.extend({
+	t:0,
 	id:1,
 	ctor:function(id)
 	{
@@ -299,12 +299,18 @@ var Bean = cc.Sprite.extend({
 		this.setZOrder(2);
 		this.vx = Math.random()*20-10;
 		this.vy = Math.random()*10+10;
+
+        this.setZOrder(2);
+
+        this.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.3),new cc.ScaleTo(0.1,1),new cc.DelayTime(0.4),new cc.ScaleTo(0.6,0.5)));
+
+        this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.removeFromParent, this)));
+
 		this.scheduleUpdate();
 	},
 	update:function(dt)
 	{
-		this.setPosition(this.getPosition().x+this.vx,this.getPosition().y+this.vy);
-		this.vy-=1.5;
-		if(this.getPosition().y<-300)this.removeFromParent();
+		this.t+=dt;
+		if(this.t>3)this.removeFromParent();
 	}
 });

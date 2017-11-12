@@ -44,7 +44,7 @@ var LoadingLayer = cc.Layer.extend({
     updateProgressBar:function(power)
     {
 		this.progressBar.setPosition(540-829/2*(1-power),140);
-		this.progressBar.setTextureRect(cc.rect(829*(power),0,828,105));
+		this.progressBar.setTextureRect(cc.rect(0,0,829*(power),105));
     },
 	onLoaded:function()
 	{

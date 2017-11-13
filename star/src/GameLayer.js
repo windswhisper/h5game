@@ -1,6 +1,8 @@
 var BOARD_SIZE = cc.size(7,9);
 var BLOCK_SIZE = cc.size(144,144);
 
+var DROP_DURATION = 1;
+
 var SCORE_PER_BLOCK = 2;
 var POWER_PER_BLOCK = 0.02;
 var SCORE_LEVEL = [100,500,2000,4000,8000,10000,20000,50000,100000,200000,400000,50000,750000,1000000];
@@ -132,14 +134,14 @@ var GameLayer = cc.Layer.extend({
 		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height+BOARD_SIZE.height*BLOCK_SIZE.height);
 		this.spriteArray[x][y].setOpacity(0);
 		this.spriteArray[x][y].runAction(new cc.Sequence(
-			new cc.DelayTime(0.5-0.5*(BOARD_SIZE.height-y)/BOARD_SIZE.height),
+			new cc.DelayTime(DROP_DURATION-DROP_DURATION*(BOARD_SIZE.height-y)/BOARD_SIZE.height),
 			new cc.FadeTo(0.1,255)
 			));
-		this.spriteArray[x][y].runAction(new cc.Sequence(
-			new cc.EaseQuadraticActionIn(new cc.MoveBy(0.5,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
-			new cc.MoveBy(0.03,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
-			new cc.MoveBy(0.07,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
-			));
+		this.spriteArray[x][y].runAction(
+			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height)))
+//			new cc.MoveBy(0.03,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
+//			new cc.MoveBy(0.07,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
+			);
 		this.boardNode.addChild(this.spriteArray[x][y]);
 	},
     onTouchBegan:function(touch, event) 
@@ -210,10 +212,8 @@ var GameLayer = cc.Layer.extend({
 						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
 						this.beansArray[i][j]=0;
 						this.spriteArray[i][j].runAction(new cc.Sequence(
-							new cc.DelayTime(0.5-0.5*this.countTempArray[i][j]/BOARD_SIZE.height),
-							new cc.EaseQuadraticActionIn(new cc.MoveBy(0.5*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
-							new cc.MoveBy(0.03,cc.p(0,-20*(BOARD_SIZE.height-j)/BOARD_SIZE.height)),
-							new cc.MoveBy(0.07,cc.p(0,20*(BOARD_SIZE.height-j)/BOARD_SIZE.height))
+							new cc.DelayTime(DROP_DURATION-DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height),
+							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width)))
 							));
 						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
 
@@ -227,7 +227,6 @@ var GameLayer = cc.Layer.extend({
 	    				{
 	    					this.putBall(i,j);
 	    				}
-
 
 	    	if(this.count>=3){
 	    		this.getCombo();

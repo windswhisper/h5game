@@ -137,11 +137,11 @@ var GameLayer = cc.Layer.extend({
 			new cc.DelayTime(DROP_DURATION-DROP_DURATION*(BOARD_SIZE.height-y)/BOARD_SIZE.height),
 			new cc.FadeTo(0.1,255)
 			));
-		this.spriteArray[x][y].runAction(
-			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height)))
-//			new cc.MoveBy(0.03,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
-//			new cc.MoveBy(0.07,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
-			);
+		this.spriteArray[x][y].runAction(new cc.Sequence(
+			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
+			new cc.MoveBy(0.05,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
+			new cc.MoveBy(0.15,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
+			));
 		this.boardNode.addChild(this.spriteArray[x][y]);
 	},
     onTouchBegan:function(touch, event) 
@@ -213,7 +213,10 @@ var GameLayer = cc.Layer.extend({
 						this.beansArray[i][j]=0;
 						this.spriteArray[i][j].runAction(new cc.Sequence(
 							new cc.DelayTime(DROP_DURATION-DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height),
-							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width)))
+							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
+				
+							new cc.MoveBy(0.05,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
+							new cc.MoveBy(0.15,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
 							));
 						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
 

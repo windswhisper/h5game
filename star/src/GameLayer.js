@@ -139,8 +139,8 @@ var GameLayer = cc.Layer.extend({
 			));
 		this.spriteArray[x][y].runAction(new cc.Sequence(
 			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION,cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
-			new cc.MoveBy(0.05,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
-			new cc.MoveBy(0.15,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
+			new cc.MoveBy(0.05,cc.p(0,-40*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
+			new cc.MoveBy(0.15,cc.p(0,40*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
 			));
 		this.boardNode.addChild(this.spriteArray[x][y]);
 	},
@@ -214,9 +214,8 @@ var GameLayer = cc.Layer.extend({
 						this.spriteArray[i][j].runAction(new cc.Sequence(
 							new cc.DelayTime(DROP_DURATION-DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height),
 							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
-				
-							new cc.MoveBy(0.05,cc.p(0,-20*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
-							new cc.MoveBy(0.15,cc.p(0,20*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
+							new cc.MoveBy(0.05,cc.p(0,-40*(BOARD_SIZE.height-y)/BOARD_SIZE.height)),
+							new cc.MoveBy(0.15,cc.p(0,40*(BOARD_SIZE.height-y)/BOARD_SIZE.height))
 							));
 						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
 

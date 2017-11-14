@@ -31,7 +31,8 @@ var LoadingLayer = cc.Layer.extend({
         var res = ["res/playpage_chess_1.png","res/playpage_chess_2.png","res/playpage_chess_3.png","res/playpage_chess_4.png","res/playpage_chess_5.png","res/playpage_chess_6.png"
         ,"res/Candy_1.png","res/Candy_2.png","res/Candy_3.png","res/Candy_4.png","res/Candy_5.png","res/Candy_6.png"
         ,"res/btn_play.png","res/logo.png","res/main_bg.jpg","res/playpage_chessbg.png","res/playpage_Top.png","res/tile_shine.png","res/playpage_bg.png","res/btn_pause.png"
-        ,"res/font/0.png","res/font/1.png","res/font/2.png","res/font/3.png","res/font/4.png","res/font/5.png","res/font/6.png","res/font/7.png","res/font/8.png","res/font/9.png","res/font/X.png"];
+        ,"res/font/0.png","res/font/1.png","res/font/2.png","res/font/3.png","res/font/4.png","res/font/5.png","res/font/6.png","res/font/7.png","res/font/8.png","res/font/9.png","res/font/X.png"
+        ,"res/playpage_bg_windows.png","res/playpage_btn_music_off.png","res/btn_resume.png","res/playpage_btn_music.png","res/btn_replay.png","res/playpage_word_stop.png"];
         cc.loader.load(res,
             function (result, count, loadedCount) {
                 var percent = (loadedCount / count * 100) | 0;

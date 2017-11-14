@@ -142,8 +142,7 @@ var GameLayer = cc.Layer.extend({
 			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION+0.3*(1-strength),cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
 			new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.3*strength,1-0.1*strength)),
 			new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.08*strength,1+0.12*strength)),
-			new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1)),
-			new cc.CallFunc(this.playDropEffect, this)
+			new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1))
 			));
 		this.boardNode.addChild(this.spriteArray[x][y]);
 	},

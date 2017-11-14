@@ -5,6 +5,7 @@ var DROP_DURATION = 1;
 
 var SCORE_PER_BLOCK = 2;
 var POWER_PER_BLOCK = 0.02;
+var POWER_SPEED = 15;
 var SCORE_LEVEL = [100,500,2000,4000,8000,10000,20000,50000,100000,200000,400000,50000,750000,1000000];
 var SCORE_RATE_LEVEL = [1,2,4,6,8,10,12,15,20,24,32,40,50,60];
 var POWER_RATE_LEVEL = [1,1,0.5,0.5,0.5,3,3,2,2,4,4,3,3,3,3,3,2.5];
@@ -108,11 +109,10 @@ var GameLayer = cc.Layer.extend({
 	},
 	update:function(dt)
 	{
-		this.power-=dt/20;
+		this.power-=dt/POWER_SPEED;
 		this.updatePowerBar(this.power);
 		if(this.power<0)
 		{
-			alert("能量耗尽，胜败乃兵家常事，请英雄再来一次吧");
 			this.unscheduleUpdate();
 		}
 	},
@@ -140,8 +140,8 @@ var GameLayer = cc.Layer.extend({
 		var strength = 1.25 - y/BOARD_SIZE.height;
 		this.spriteArray[x][y].runAction(new cc.Sequence(
 			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION+0.3*(1-strength),cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
-			new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.15*strength,1-0.05*strength)),
-			new cc.EaseSineOut(new cc.ScaleTo(0.10,1-0.04*strength,1+0.06*strength)),
+			new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.3*strength,1-0.1*strength)),
+			new cc.EaseSineOut(new cc.ScaleTo(0.10,1-0.08*strength,1+0.12*strength)),
 			new cc.EaseSineOut(new cc.ScaleTo(0.06,1,1))
 			));
 		this.boardNode.addChild(this.spriteArray[x][y]);
@@ -217,9 +217,9 @@ var GameLayer = cc.Layer.extend({
 						this.spriteArray[i][j].runAction(new cc.Sequence(
 							new cc.DelayTime((DROP_DURATION+(1-strength)*0.3)*(1-this.countTempArray[i][j]/BOARD_SIZE.height)),
 							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
-			new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.15*strength,1-0.05*strength)),
-			new cc.EaseSineOut(new cc.ScaleTo(0.10,1-0.04*strength,1+0.06*strength)),
-			new cc.EaseSineOut(new cc.ScaleTo(0.06,1,1))
+							new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.3*strength,1-0.1*strength)),
+							new cc.EaseSineOut(new cc.ScaleTo(0.10,1-0.08*strength,1+0.12*strength)),
+							new cc.EaseSineOut(new cc.ScaleTo(0.06,1,1))
 							));
 						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
 

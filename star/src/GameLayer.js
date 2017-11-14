@@ -211,9 +211,10 @@ var GameLayer = cc.Layer.extend({
 				}
 
 			for(var i=0;i<BOARD_SIZE.width;i++)
+			{
+				var effect = new cc.CallFunc(this.playDropEffect, this);
 				for(var j=0;j<BOARD_SIZE.height;j++)
 				{
-					var effect = new cc.CallFunc(this.playDropEffect, this);
 					if(this.beansArray[i][j]!=0&&this.countTempArray[i][j]!=0)
 					{
 						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
@@ -231,7 +232,7 @@ var GameLayer = cc.Layer.extend({
 						effect = new cc.DelayTime(0);
 					}
 				}
-
+			}
 
 			for(var i=0;i<BOARD_SIZE.width;i++)
 				for(var j=0;j<BOARD_SIZE.height;j++)

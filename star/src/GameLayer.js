@@ -29,6 +29,7 @@ var GameLayer = cc.Layer.extend({
 	countTempArray:[],
 	count:null,
 
+	effect:null,
 	score:0,
 	combo:0,
 	level:1,
@@ -106,6 +107,8 @@ var GameLayer = cc.Layer.extend({
           onTouchEnded: this.onTouchEnded
         }, this);
 		this.scheduleUpdate();
+
+		this.effect =  new cc.DelayTime(0);
 	},
 	update:function(dt)
 	{
@@ -140,6 +143,7 @@ var GameLayer = cc.Layer.extend({
 		var strength = 1.25 - y/BOARD_SIZE.height;
 		this.spriteArray[x][y].runAction(new cc.Sequence(
 			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION+0.3*(1-strength),cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
+			this.effect,
 			new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.2*strength,1-0.07*strength)),
 			new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.05*strength,1+0.08*strength)),
 			new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1))
@@ -167,6 +171,14 @@ var GameLayer = cc.Layer.extend({
     {
         var target = event.getCurrentTarget();
         var p = target.boardNode.convertTouchToNodeSpace(touch);
+
+        var p2 = target.convertTouchToNodeSpace(touch);
+
+        if(cc.pDistanceSQ(target.btnPause.getPosition(),p2)<2500)
+        {
+        	target.addChild(new PauseLayer(target));
+        	target.pause();
+        }
 
         p.x += BLOCK_SIZE.width/2;
         p.y += BLOCK_SIZE.height/2;
@@ -235,11 +247,15 @@ var GameLayer = cc.Layer.extend({
 			}
 
 			for(var i=0;i<BOARD_SIZE.width;i++)
+			{
+				this.effect = new cc.CallFunc(this.playDropEffect, this);
 				for(var j=0;j<BOARD_SIZE.height;j++)
 	    			if(this.beansArray[i][j] == 0)
 	    				{
 	    					this.putBall(i,j);
 	    				}
+				this.effect = new cc.DelayTime(0);
+			}
 
 	    	if(this.count>=3){
 	    		this.getCombo();
@@ -346,6 +362,16 @@ var GameLayer = cc.Layer.extend({
     updateScore:function()
     {
     	this.scoreLabel.setString(this.score);;
+    },
+    restart:function()
+    {
+		for(var i=0;i<BOARD_SIZE.width;i++)
+			for(var j=0;j<BOARD_SIZE.height;j++)
+			{
+				this.spriteArray[i][j].removeFromParent();
+			}
+
+		this.newGame();
     }
 });
 

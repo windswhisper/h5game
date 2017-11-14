@@ -214,6 +214,7 @@ var GameLayer = cc.Layer.extend({
 			for(var i=0;i<BOARD_SIZE.width;i++)
 				for(var j=0;j<BOARD_SIZE.height;j++)
 				{
+					var effect = new cc.CallFunc(this.playDropEffect, this);
 					if(this.beansArray[i][j]!=0&&this.countTempArray[i][j]!=0)
 					{
 						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
@@ -222,13 +223,13 @@ var GameLayer = cc.Layer.extend({
 						this.spriteArray[i][j].runAction(new cc.Sequence(
 							new cc.DelayTime((DROP_DURATION+(1-strength)*0.3)*(1-this.countTempArray[i][j]/BOARD_SIZE.height)),
 							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
+							effect,
 							new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.3*strength,1-0.1*strength)),
 							new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.08*strength,1+0.12*strength)),
-							new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1)),
-							new cc.CallFunc(this.playDropEffect, this)
+							new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1))
 							));
 						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
-
+						effect = new cc.DelayTime(0);
 					}
 				}
 

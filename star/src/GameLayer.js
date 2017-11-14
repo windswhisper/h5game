@@ -140,8 +140,8 @@ var GameLayer = cc.Layer.extend({
 		var strength = 1.25 - y/BOARD_SIZE.height;
 		this.spriteArray[x][y].runAction(new cc.Sequence(
 			new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION+0.3*(1-strength),cc.p(0,-BOARD_SIZE.height*BLOCK_SIZE.height))),
-			new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.3*strength,1-0.1*strength)),
-			new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.08*strength,1+0.12*strength)),
+			new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.2*strength,1-0.07*strength)),
+			new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.05*strength,1+0.08*strength)),
 			new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1))
 			));
 		this.boardNode.addChild(this.spriteArray[x][y]);
@@ -224,8 +224,8 @@ var GameLayer = cc.Layer.extend({
 							new cc.DelayTime((DROP_DURATION+(1-strength)*0.3)*(1-this.countTempArray[i][j]/BOARD_SIZE.height)),
 							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
 							effect,
-							new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.3*strength,1-0.1*strength)),
-							new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.08*strength,1+0.12*strength)),
+							new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.2*strength,1-0.07*strength)),
+							new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.05*strength,1+0.07*strength)),
 							new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1))
 							));
 						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];

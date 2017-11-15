@@ -1,3 +1,4 @@
+var _adapteSize = 1;
 var GameScene = cc.Scene.extend({
 	ctor:function()
 	{
@@ -5,14 +6,16 @@ var GameScene = cc.Scene.extend({
 
 		this._super();
 
-		this.addChild(new LoadingLayer());
-
 		this.adaptScreen();
 
 		window.onresize = function()
 		{
 			_gameScene.adaptScreen();
 		}
+
+		
+		this.addChild(new LoadingLayer());
+
 	},
 	adaptScreen:function()
 	{
@@ -22,7 +25,8 @@ var GameScene = cc.Scene.extend({
         var visibleSize = cc.view.getVisibleSize();
         this.setPosition(size.width/2-visibleSize.height/size.height*size.width/2,size.height/2-visibleSize.height/size.height*size.height/2);
         this.setAnchorPoint(0, 0);
-        this.setScale(visibleSize.height/size.height);
+        _adapteSize = visibleSize.height/size.height
+        this.setScale(_adapteSize);
 
 	}
 });

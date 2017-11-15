@@ -40,7 +40,7 @@ var GameLayer = cc.Layer.extend({
 		this._super();
 
 		var bg = new cc.Sprite("res/playpage_bg.png");
-		bg.setScale(1.3);
+		bg.setScale(1/_adapteSize);
 		bg.setPosition(540,960);
 		this.addChild(bg);
 

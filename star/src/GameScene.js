@@ -8,6 +8,8 @@ var GameScene = cc.Scene.extend({
 
 		this.adaptScreen();
 
+		cc.view.enableRetina(true);
+		
 		window.onresize = function()
 		{
 			_gameScene.adaptScreen();

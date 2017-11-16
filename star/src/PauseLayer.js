@@ -188,14 +188,17 @@ var PauseLayer = cc.Layer.extend({
             if(cc.pDistanceSQ(target.btnSound.getPosition(),p)<6000)
             {
             	target.switchSound();
+                cc.audioEngine.playEffect("res/music/drop.mp3");
             }
             else if(cc.pDistanceSQ(target.btnResume.getPosition(),p)<10000)
             {
             	target.resumeGame();
+                cc.audioEngine.playEffect("res/music/drop.mp3");
             }
             else if(cc.pDistanceSQ(target.btnRestart.getPosition(),p)<6000)
             {
             	target.showConfirm();
+                cc.audioEngine.playEffect("res/music/drop.mp3");
             }
         }
         else
@@ -205,10 +208,12 @@ var PauseLayer = cc.Layer.extend({
             if(cc.pDistanceSQ(target.btnRestartYes.getPosition(),p)<6000)
             {
                 target.restart();
+                cc.audioEngine.playEffect("res/music/drop.mp3");
             }
             if(cc.pDistanceSQ(target.btnRestartNo.getPosition(),p)<6000)
             {
                 target.hideConfirm();
+                cc.audioEngine.playEffect("res/music/drop.mp3");
             }
         }
     },

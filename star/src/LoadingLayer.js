@@ -5,26 +5,24 @@ var LoadingLayer = cc.Layer.extend({
 
 		this._super();
 
-		this.bg = new cc.Sprite("res/loading_bg.jpg");
+		this.shadow = new cc.LayerColor(cc.color(4,166,103,255));
 
-		this.bg.setPosition(540,960);
+		this.shadow.setScale(50);
 
-		this.bg.setScale(1/_adapteSize);
-
-		this.addChild(this.bg);
+		this.addChild(this.shadow);
 
 
-		this.logo = new cc.Sprite("res/logo.png");
+		this.logoLoading = new cc.Sprite("res/logo_loading.png");
 
-		this.logo.setPosition(540,960);
+		this.logoLoading.setPosition(540,1060);
 
-		this.addChild(this.logo,1);
+		this.addChild(this.logoLoading);
 
-		var progressBg = new cc.Sprite("res/playpage_progress_bg.png");
-		progressBg.setPosition(540,140);
-		this.addChild(progressBg); 
+		this.progressBg = new cc.Sprite("res/loading_bottom.png");
+		this.progressBg.setPosition(540,140);
+		this.addChild(this.progressBg); 
 
-		this.progressBar = new cc.Sprite("res/playpage_progress.png");
+		this.progressBar = new cc.Sprite("res/loading_top.png");
 		this.progressBar.setPosition(540,140);
 		this.addChild(this.progressBar); 
 
@@ -44,12 +42,14 @@ var LoadingLayer = cc.Layer.extend({
 	},
     updateProgressBar:function(power)
     {
-		this.progressBar.setPosition(540-829/2*(1-power),140);
-		this.progressBar.setTextureRect(cc.rect(0,0,829*(power),105));
+		this.progressBar.setPosition(540-640/2*(1-power),140);
+		this.progressBar.setTextureRect(cc.rect(0,0,640*(power),29));
     },
 	onLoaded:function()
 	{
-		this.logo.runAction(new cc.EaseExponentialOut(new cc.MoveBy(2,cc.p(0,500))));
+		this.progressBar.setOpacity(0);
+		this.progressBg.setOpacity(0);
+		this.logoLoading.setOpacity(0);
 
 		this.mainBg = new cc.Sprite("res/main_bg.jpg");
 
@@ -63,9 +63,15 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.addChild(this.mainBg);
 
+		this.logo = new cc.Sprite("res/logo.png");
+
+		this.logo.setPosition(540,1500);
+
+		this.addChild(this.logo);
+
 		this.btnStart = new cc.Sprite("res/btn_play.png");
 
-		this.btnStart.setPosition(540,780);
+		this.btnStart.setPosition(540,880);
 
 		this.btnStart.setScale(0);
 
@@ -74,25 +80,49 @@ var LoadingLayer = cc.Layer.extend({
 		this.btnStart.runAction(action);
 
 		this.addChild(this.btnStart);
-	
-		var _gameScene = this;
 
 		cc.eventManager.addListener({
 	          event: cc.EventListener.TOUCH_ONE_BY_ONE,
 	          swallowTouches: false,
-	          onTouchBegan: function(){
+	          onTouchBegan: function(touch,event){
+		        var target = event.getCurrentTarget();
+		        var p = target.convertTouchToNodeSpace(touch);
+
+	           	target.btnStart.setOpacity(255);
+	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
+	            {
+	            	target.btnStart.setOpacity(200);
+	            }
 	          	return true;
 	          },
-	          onTouchMoved: function(){
+	          onTouchMoved: function(touch,event){
+		        var target = event.getCurrentTarget();
+		        var p = target.convertTouchToNodeSpace(touch);
+	            
+	           	target.btnStart.setOpacity(255);
+
+	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
+	            {
+	            	target.btnStart.setOpacity(200);
+	            }
 	          },
-	          onTouchEnded: function(){
-	          	_gameScene.startGame();
+	          onTouchEnded: function(touch,event){
+		        var target = event.getCurrentTarget();
+		        var p = target.convertTouchToNodeSpace(touch);
+
+	           	target.btnStart.setOpacity(255);
+
+	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
+	            {
+		          	target.startGame();
+					cc.audioEngine.playEffect("res/music/drop.mp3");
+	            }
 	          },
-	        }, this.btnStart);
+	        }, this);
 	},
 	startGame:function()
 	{
-		this.removeAllChildren();
-		this.addChild(new GameLayer);
+		this.getParent().addChild(new GameLayer);
+		this.removeFromParent();
 	}
 });

@@ -177,6 +177,7 @@ var GameLayer = cc.Layer.extend({
         if(cc.pDistanceSQ(target.btnPause.getPosition(),p2)<2500)
         {
         	target.addChild(new PauseLayer(target));
+               cc.audioEngine.playEffect("res/music/drop.mp3");
         	target.pause();
         }
 

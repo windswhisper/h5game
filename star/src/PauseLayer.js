@@ -221,12 +221,14 @@ var PauseLayer = cc.Layer.extend({
     {
     	if(isSoundOn)
     	{
-    		cc.audioEngine.setEffectsVolume(0);
+            cc.audioEngine.setEffectsVolume(0);
+            cc.audioEngine.setMusicVolume(0);
     		this.btnSound.setTexture("res/playpage_btn_music_off.png");
     	}
     	else
     	{
     		cc.audioEngine.setEffectsVolume(100);
+            cc.audioEngine.setMusicVolume(100);
     		this.btnSound.setTexture("res/playpage_btn_music.png");
     	}
     	isSoundOn = !isSoundOn;

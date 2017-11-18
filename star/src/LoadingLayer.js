@@ -48,8 +48,9 @@ var LoadingLayer = cc.Layer.extend({
     },
 	onLoaded:function()
 	{
+
 		cc.audioEngine.playMusic("res/music/music_bgm.mp3");
-		
+
 		this.progressBar.setOpacity(0);
 		this.progressBg.setOpacity(0);
 		this.logoLoading.setOpacity(0);
@@ -94,7 +95,7 @@ var LoadingLayer = cc.Layer.extend({
 	           	target.btnStart.setOpacity(255);
 	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
 	            {
-	            	target.btnStart.setOpacity(200);
+	            	target.btnStart.setOpacity(160);
 	            }
 	          	return true;
 	          },
@@ -106,7 +107,7 @@ var LoadingLayer = cc.Layer.extend({
 
 	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
 	            {
-	            	target.btnStart.setOpacity(200);
+	            	target.btnStart.setOpacity(160);
 	            }
 	          },
 	          onTouchEnded: function(touch,event){
@@ -122,6 +123,7 @@ var LoadingLayer = cc.Layer.extend({
 	            }
 	          },
 	        }, this);
+
 	},
 	startGame:function()
 	{

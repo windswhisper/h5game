@@ -3,15 +3,42 @@ var BLOCK_SIZE = cc.size(144,144);
 
 var DROP_DURATION = 1;
 
-var SCORE_PER_BLOCK = 2;
-var POWER_PER_BLOCK = 0.02;
+var SCORE_PER_BLOCK = 10;
+var POWER_PER_BLOCK = 1;
 var POWER_SPEED = 15;
 var SCORE_LEVEL = [100,500,2000,4000,8000,10000,20000,50000,100000,200000,400000,50000,750000,1000000];
 var SCORE_RATE_LEVEL = [1,2,4,6,8,10,12,15,20,24,32,40,50,60];
-var POWER_RATE_LEVEL = [1,1,0.5,0.5,0.5,3,3,2,2,4,4,3,3,3,3,3,2.5];
-var COLOR_LEVEL = [3,4,4,4,4,5,5,5,5,6];
-var COMBO_RATE = [1,1,1.2,1.5,1.8,2.0];
-var SCORE_EXTRA = [0,0,0,0,10,10,10,10,20,20,50];
+var POWER_LEVEL = [30,30,40,50,50,50,50,50];
+var COLOR_LEVEL = [4,5];
+var COMBO_RATE = [1,1,2];
+var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];
+var ICE_BLOCK_TIME = 3;
+var ICE_BLOCK_RATE = [0,10];
+
+var STAGE_MAP = [
+	[
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0
+	],
+	[
+	0,0,0,1,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,1,0,0,0,
+	0,0,0,1,0,0,0,
+	1,0,1,1,1,0,1,
+	0,0,0,1,0,0,0,
+	0,0,0,1,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,1,0,0,0
+	]
+];
 
 function arv(arr,index)
 {
@@ -33,7 +60,7 @@ var GameLayer = cc.Layer.extend({
 	score:0,
 	combo:0,
 	level:1,
-	power:1,
+	power:0,
 
 	ctor:function()
 	{
@@ -112,12 +139,7 @@ var GameLayer = cc.Layer.extend({
 	},
 	update:function(dt)
 	{
-		this.power-=dt/POWER_SPEED;
-		this.updatePowerBar(this.power);
-		if(this.power<0)
-		{
-			this.unscheduleUpdate();
-		}
+
 	},
 
 	newGame:function()
@@ -126,14 +148,39 @@ var GameLayer = cc.Layer.extend({
 		{
 			for(var j=0;j<BOARD_SIZE.height;j++)
 			{
-				this.putBall(i,j);
+				var map = arv(STAGE_MAP,this.level);
+				if(map[i+(BOARD_SIZE.height-j-1)*BOARD_SIZE.width]!=0)
+				{
+					this.putBall(i,j,-1);
+				}
+				else
+				{
+					var rand = Math.floor(Math.random()*arv(COLOR_LEVEL,this.level))+1;
+					this.putBall(i,j,rand);
+				}
 			}
 		}
 	},
-	putBall:function(x,y)
+	putBallRandom:function(x,y)
 	{
-		this.beansArray[x][y] = Math.floor(Math.random()*arv(COLOR_LEVEL,this.level))+1;
-		this.spriteArray[x][y] = new Bean(this.beansArray[x][y]);
+		if(arv(ICE_BLOCK_RATE,this.level)>Math.random()*100)
+		{
+			this.putBall(x,y,-1);
+		}
+		else
+		{
+			var rand = Math.floor(Math.random()*arv(COLOR_LEVEL,this.level))+1;
+			this.putBall(x,y,rand);
+		}
+
+	},
+	putBall:function(x,y,ballType)
+	{
+		this.beansArray[x][y] = ballType;
+		if(ballType<0)
+			this.spriteArray[x][y] = new IceBlock();
+		else
+			this.spriteArray[x][y] = new Bean(this.beansArray[x][y]);
 		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height+BOARD_SIZE.height*BLOCK_SIZE.height);
 		this.spriteArray[x][y].setOpacity(0);
 		this.spriteArray[x][y].runAction(new cc.Sequence(
@@ -191,6 +238,7 @@ var GameLayer = cc.Layer.extend({
     },
     clickxy:function(x,y)
     {
+    	if(this.beansArray[x][y]==-1)return;
     	this.count = 0;
 		for(var i=0;i<BOARD_SIZE.width;i++)
 			for(var j=0;j<BOARD_SIZE.height;j++)
@@ -200,16 +248,26 @@ var GameLayer = cc.Layer.extend({
     	{
 			for(var i=0;i<BOARD_SIZE.width;i++)
 				for(var j=0;j<BOARD_SIZE.height;j++)
-	    			if(this.countTempArray[i][j] != 0)
+	    			if(this.countTempArray[i][j] == 1)
 	    				{
 	    					this.hitBean(i,j);
-	    					//this.putBall(i,j);
+	    					if(i-1>=0&&this.beansArray[i-1][j]==-1)this.countTempArray[i-1][j]=-1;
+	    					if(j-1>=0&&this.beansArray[i][j-1]==-1)this.countTempArray[i][j-1]=-1;
+	    					if(i+1<BOARD_SIZE.width&&this.beansArray[i+1][j]==-1)this.countTempArray[i+1][j]=-1;
+	    					if(j+1>BOARD_SIZE.height&&this.beansArray[i][j+1]==-1)this.countTempArray[i][j+1]=-1;
 	    				}
 
 
 			for(var i=0;i<BOARD_SIZE.width;i++)
 				for(var j=0;j<BOARD_SIZE.height;j++)
+				{
+					if(this.countTempArray[i][j]==-1)
+					{
+						this.spriteArray[i][j].hit();
+						if(this.spriteArray[i][j].time==0)this.beansArray[i][j]=0;
+					}
 	    			this.countTempArray[i][j] = 0;
+	    		}
 
 			for(var i=0;i<BOARD_SIZE.width;i++)
 				for(var j=0;j<BOARD_SIZE.height;j++)
@@ -253,7 +311,7 @@ var GameLayer = cc.Layer.extend({
 				for(var j=0;j<BOARD_SIZE.height;j++)
 	    			if(this.beansArray[i][j] == 0)
 	    				{
-	    					this.putBall(i,j);
+	    					this.putBallRandom(i,j);
 	    				}
 				this.effect = new cc.DelayTime(0);
 			}
@@ -305,7 +363,7 @@ var GameLayer = cc.Layer.extend({
 			    		cc.audioEngine.playEffect("res/music/combo_6.mp3");
 			    		break;
 		    	}
-		    this.power+=this.count*arv(POWER_RATE_LEVEL,this.level)*POWER_PER_BLOCK;
+		    this.power+=this.count*POWER_PER_BLOCK;
 		    if(this.power>1)this.power=1;
 		    this.updatePowerBar();
 
@@ -347,7 +405,7 @@ var GameLayer = cc.Layer.extend({
     updatePowerBar:function(power)
     {
 		this.progressBar.setPosition(540,140);
-		this.progressBar.setTextureRect(cc.rect(829*(1-power),0,828,105));
+		this.progressBar.setTextureRect(cc.rect(829*(1-power/100),0,828,105));
     },
     getScore:function(s)
     {
@@ -405,5 +463,30 @@ var Bean = cc.Sprite.extend({
 	{
 		this.t+=dt;
 		if(this.t>3)this.removeFromParent();
+	}
+});
+
+var IceBlock = cc.Node.extend({
+	time:0,
+	item:null,
+	ctor:function(item)
+	{
+		this._super();
+
+		this.time = ICE_BLOCK_TIME;
+
+		this.sp = new cc.Sprite("res/playpage_ico_ice.png");
+
+		this.addChild(this.sp);
+
+	},
+	hit:function()
+	{
+		this.time--;
+		if(this.time==0)this.clash();
+	},
+	clash:function()
+	{
+		this.removeFromParent();
 	}
 });

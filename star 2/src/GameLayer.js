@@ -28,20 +28,9 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0
 	],
 	[
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	1,0,2,2,2,0,1,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,1,0,0,0
-	],
-	[
 	0,0,0,1,0,0,0,
 	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
+	0,0,0,1,0,0,0,
 	0,0,0,1,0,0,0,
 	1,0,1,1,1,0,1,
 	0,0,0,1,0,0,0,
@@ -50,8 +39,6 @@ var STAGE_MAP = [
 	0,0,0,1,0,0,0
 	]
 ];
-
-var _gameLayer;
 
 function arv(arr,index)
 {
@@ -78,8 +65,6 @@ var GameLayer = cc.Layer.extend({
 	ctor:function()
 	{
 		this._super();
-
-		_gameLayer = this;
 
 		var bg = new cc.Sprite("res/playpage_bg.png");
 		bg.setScale(1/_adapteSize);
@@ -166,7 +151,7 @@ var GameLayer = cc.Layer.extend({
 				var map = arv(STAGE_MAP,this.level);
 				if(map[i+(BOARD_SIZE.height-j-1)*BOARD_SIZE.width]!=0)
 				{
-					this.putBall(i,j,-map[i+(BOARD_SIZE.height-j-1)*BOARD_SIZE.width]);
+					this.putBall(i,j,-1);
 				}
 				else
 				{
@@ -193,11 +178,9 @@ var GameLayer = cc.Layer.extend({
 	{
 		this.beansArray[x][y] = ballType;
 		if(ballType<0)
-			this.spriteArray[x][y] = new IceBlock(ballType);
+			this.spriteArray[x][y] = new IceBlock();
 		else
 			this.spriteArray[x][y] = new Bean(this.beansArray[x][y]);
-		this.spriteArray[x][y].cx = x;
-		this.spriteArray[x][y].cy = y;
 		this.spriteArray[x][y].setPosition(x*BLOCK_SIZE.width,y*BLOCK_SIZE.height+BOARD_SIZE.height*BLOCK_SIZE.height);
 		this.spriteArray[x][y].setOpacity(0);
 		this.spriteArray[x][y].runAction(new cc.Sequence(
@@ -255,7 +238,7 @@ var GameLayer = cc.Layer.extend({
     },
     clickxy:function(x,y)
     {
-    	if(this.beansArray[x][y]<=0)return;
+    	if(this.beansArray[x][y]==-1)return;
     	this.count = 0;
 		for(var i=0;i<BOARD_SIZE.width;i++)
 			for(var j=0;j<BOARD_SIZE.height;j++)
@@ -268,10 +251,10 @@ var GameLayer = cc.Layer.extend({
 	    			if(this.countTempArray[i][j] == 1)
 	    				{
 	    					this.hitBean(i,j);
-	    					if(i-1>=0&&this.beansArray[i-1][j]<=0)this.countTempArray[i-1][j]=-1;
-	    					if(j-1>=0&&this.beansArray[i][j-1]<=0)this.countTempArray[i][j-1]=-1;
-	    					if(i+1<BOARD_SIZE.width&&this.beansArray[i+1][j]<=0)this.countTempArray[i+1][j]=-1;
-	    					if(j+1<BOARD_SIZE.height&&this.beansArray[i][j+1]<=0)this.countTempArray[i][j+1]=-1;
+	    					if(i-1>=0&&this.beansArray[i-1][j]==-1)this.countTempArray[i-1][j]=-1;
+	    					if(j-1>=0&&this.beansArray[i][j-1]==-1)this.countTempArray[i][j-1]=-1;
+	    					if(i+1<BOARD_SIZE.width&&this.beansArray[i+1][j]==-1)this.countTempArray[i+1][j]=-1;
+	    					if(j+1>BOARD_SIZE.height&&this.beansArray[i][j+1]==-1)this.countTempArray[i][j+1]=-1;
 	    				}
 
 
@@ -281,6 +264,7 @@ var GameLayer = cc.Layer.extend({
 					if(this.countTempArray[i][j]==-1)
 					{
 						this.spriteArray[i][j].hit();
+						if(this.spriteArray[i][j].time==0)this.beansArray[i][j]=0;
 					}
 	    			this.countTempArray[i][j] = 0;
 	    		}
@@ -304,7 +288,6 @@ var GameLayer = cc.Layer.extend({
 				{
 					if(this.beansArray[i][j]!=0&&this.countTempArray[i][j]!=0)
 					{
-						this.spriteArray[i][j].cy = j-this.countTempArray[i][j];
 						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
 						this.beansArray[i][j]=0;
 						var strength = 1.25 - j/BOARD_SIZE.height;
@@ -463,16 +446,12 @@ var Bean = cc.Sprite.extend({
 	},
 	hit:function()
 	{
-		_gameLayer.beansArray[this.cx][this.cy] = 0;
-
 		this.setTexture("res/Candy_"+this.id+".png");
 		this.setZOrder(2);
 		this.vx = Math.random()*20-10;
 		this.vy = Math.random()*10+10;
 
         this.setZOrder(2);
-
-        this.stopAllActions();
 
         this.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.3),new cc.ScaleTo(0.1,1),new cc.DelayTime(0.4),new cc.ScaleTo(0.6,0.5)));
 
@@ -500,9 +479,6 @@ var IceBlock = cc.Node.extend({
 
 		this.addChild(this.sp);
 
-		this.item = item;
-		if(this.item==-2)this.sp.setOpacity(128);
-
 	},
 	hit:function()
 	{
@@ -513,20 +489,6 @@ var IceBlock = cc.Node.extend({
 	},
 	clash:function()
 	{
-		_gameLayer.beansArray[this.cx][this.cy] = 0;
-		if(this.item==-2)
-		{
-			for(var i=this.cx-1;i<=this.cx+1;i++)
-			{
-				for(var j=this.cy-1;j<=this.cy+1;j++)
-				{
-					if(_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
-					{
-						_gameLayer.spriteArray[i][j].hit();
-					}
-				}
-			}
-		}
 		this.removeFromParent();
 	}
 });

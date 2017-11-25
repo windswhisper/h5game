@@ -3,17 +3,17 @@ var BLOCK_SIZE = cc.size(144,144);
 
 var DROP_DURATION = 1;
 
-var SCORE_PER_BLOCK = 10;
-var POWER_PER_BLOCK = 1;
+var SCORE_PER_BLOCK = 10;//单个方块消除分数
+var POWER_PER_BLOCK = 1;//单个方块消除能量
 var POWER_SPEED = 15;
-var SCORE_LEVEL = [100,500,2000,4000,8000,10000,20000,50000,100000,200000,400000,50000,750000,1000000];
-var SCORE_RATE_LEVEL = [1,2,4,6,8,10,12,15,20,24,32,40,50,60];
-var POWER_LEVEL = [30,30,40,50,50,50,50,50];
-var COLOR_LEVEL = [4,5];
-var COMBO_RATE = [1,1,2];
-var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];
-var ICE_BLOCK_TIME = 3;
-var ICE_BLOCK_RATE = [0,10];
+var SCORE_LEVEL = [0,1000,2500,4000,7500,10000,12000,15000,18000,20000,24000,30000];
+var SCORE_RATE_LEVEL = [1];
+var POWER_LEVEL = [30,30,40,50,50,50,50,50];//升级所需能量
+var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
+var COMBO_RATE = [1,1,2];//连击加成比率
+var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];//多消额外加分
+var ICE_BLOCK_TIME = 3;//冰块需打破次数
+var ICE_BLOCK_RATE = [0,0,5,10,10,15,15,20,40,0,25];//冰块出现概率随等级提高
 
 var STAGE_MAP = [
 	[
@@ -28,27 +28,82 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0
 	],
 	[
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	1,0,2,2,2,0,1,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,2,0,0,0,
-	0,0,0,1,0,0,0
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0
 	],
 	[
-	0,0,0,1,0,0,0,
+	0,0,0,0,0,0,0,
+	0,1,0,1,0,1,0,
+	0,0,0,0,0,0,0,
+	0,1,0,1,0,1,0,
+	0,0,0,0,0,0,0,
+	0,1,0,1,0,1,0,
+	0,0,0,0,0,0,0,
+	0,1,0,1,0,1,0,
+	0,0,0,0,0,0,0
+	],
+	[
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
-	0,0,0,1,0,0,0,
-	1,0,1,1,1,0,1,
-	0,0,0,1,0,0,0,
-	0,0,0,1,0,0,0,
 	0,0,0,0,0,0,0,
+	0,0,1,1,1,0,0,
+	0,0,1,1,1,0,0,
+	0,0,1,1,1,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0
+	],
+	[
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0
+	],
+	[
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1
+	],
+	[
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	1,0,0,0,0,0,1,
+	1,1,0,0,0,1,1,
+	1,1,1,0,1,1,1,
+	1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,
+	],
+	[
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,1,0,0,0,1,0,
+	1,1,1,0,1,1,1,
+	0,1,0,0,0,1,0,
+	0,0,0,1,0,0,0,
+	0,0,1,1,1,0,0,
 	0,0,0,1,0,0,0
-	]
+	],
 ];
 
 var _gameLayer;
@@ -69,6 +124,7 @@ var GameLayer = cc.Layer.extend({
 	countTempArray:[],
 	count:null,
 
+	untouch:false,
 	effect:null,
 	score:0,
 	combo:0,
@@ -159,6 +215,29 @@ var GameLayer = cc.Layer.extend({
 
 	newGame:function()
 	{
+		console.log(this);
+		this.level = 1;
+		this.putBlock();
+	},
+
+	clearBoard:function()
+	{
+		this.untouch = true;
+
+		for(var i=0;i<BOARD_SIZE.width;i++)
+		{
+			for(var j=0;j<BOARD_SIZE.height;j++)
+			{
+				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime((BOARD_SIZE.height-j-1)*0.1),new cc.EaseSineIn(new cc.ScaleTo(0.5,0)),
+					new cc.CallFunc(this.spriteArray[i][j].removeFromParent,this.spriteArray[i][j])));
+			}
+		}
+	},
+
+	putBlock:function()
+	{
+		this.untouch = false;
+
 		for(var i=0;i<BOARD_SIZE.width;i++)
 		{
 			for(var j=0;j<BOARD_SIZE.height;j++)
@@ -222,6 +301,8 @@ var GameLayer = cc.Layer.extend({
     {
         var target = event.getCurrentTarget();
         var p = touch.getLocation();
+
+        if(target.untouch)return false;
 
         return true;
     },
@@ -428,12 +509,25 @@ var GameLayer = cc.Layer.extend({
     {
     	this.score+=Math.floor(s);
     	this.updateScore();
-    	if(this.level<15&&this.score>SCORE_LEVEL[this.level])this.levelUp();
+    	if(this.level<15&&this.score>=SCORE_LEVEL[this.level])this.levelUp();
     },
 	levelUp:function()
 	{
 		this.level++;
 		this.levelLabel.setString(this.level);
+		var levelUpBar = new cc.Sprite("res/playpage_word_levelup.png");
+		levelUpBar.setPosition(540,880);
+		levelUpBar.setOpacity(0);
+		levelUpBar.runAction(new cc.Sequence(new cc.FadeTo(0.4,255),new cc.MoveBy(0.4,cc.p(0,200)),new cc.DelayTime(0.5),new cc.FadeTo(0.4,255),new cc.MoveBy(0.4,cc.p(0,200)),new cc.CallFunc(
+				function(){
+					this.removeFromParent();
+				},levelUpBar)
+		));
+		this.addChild(levelUpBar);
+
+		this.clearBoard();
+
+		this.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.CallFunc(this.putBlock,this)));
 	},
     updateScore:function()
     {
@@ -441,13 +535,8 @@ var GameLayer = cc.Layer.extend({
     },
     restart:function()
     {
-		for(var i=0;i<BOARD_SIZE.width;i++)
-			for(var j=0;j<BOARD_SIZE.height;j++)
-			{
-				this.spriteArray[i][j].removeFromParent();
-			}
-
-		this.newGame();
+		this.clearBoard();
+		this.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.CallFunc(this.newGame,this)));
     }
 });
 

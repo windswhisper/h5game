@@ -164,7 +164,7 @@ var PauseLayer = cc.Layer.extend({
             target.btnRestartNo.setScale(1);
             if(cc.pDistanceSQ(target.btnRestartYes.getPosition(),p)<6000)
             {
-                target.btnRestartYew.setScale(0.8);
+                target.btnRestartYes.setScale(0.8);
             }
             if(cc.pDistanceSQ(target.btnRestartNo.getPosition(),p)<6000)
             {
@@ -177,7 +177,6 @@ var PauseLayer = cc.Layer.extend({
     {
         var target = event.getCurrentTarget();
         var p = target.convertTouchToNodeSpace(touch);
-
 
         if(!target.isRestarting)
         {

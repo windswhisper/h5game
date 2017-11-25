@@ -49,7 +49,7 @@ var LoadingLayer = cc.Layer.extend({
 	onLoaded:function()
 	{
 
-		cc.audioEngine.playMusic("res/music/music_bgm.mp3");
+		cc.audioEngine.playMusic("res/music/music_bgm.mp3",true);
 
 		this.progressBar.setOpacity(0);
 		this.progressBg.setOpacity(0);

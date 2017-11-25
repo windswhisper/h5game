@@ -217,7 +217,7 @@ var GameLayer = cc.Layer.extend({
 	{
 		console.log(this);
 		this.level = 1;
-		this.putBlock();
+		this.putBlocks();
 	},
 
 	clearBoard:function()
@@ -234,7 +234,7 @@ var GameLayer = cc.Layer.extend({
 		}
 	},
 
-	putBlock:function()
+	putBlocks:function()
 	{
 		this.untouch = false;
 
@@ -254,6 +254,8 @@ var GameLayer = cc.Layer.extend({
 				}
 			}
 		}
+
+    	this.updatePowerBar();
 	},
 	putBallRandom:function(x,y)
 	{
@@ -502,13 +504,16 @@ var GameLayer = cc.Layer.extend({
     },
     updatePowerBar:function(power)
     {
+    	var progress = (this.score-SCORE_LEVEL[this.level-1])/(SCORE_LEVEL[this.level]-SCORE_LEVEL[this.level-1]);
+    	if(progress>1)progress=1;
 		this.progressBar.setPosition(540,140);
-		this.progressBar.setTextureRect(cc.rect(829*(1-power/100),0,828,105));
+		this.progressBar.setTextureRect(cc.rect(829*(1-progress),0,828,105));
     },
     getScore:function(s)
     {
     	this.score+=Math.floor(s);
     	this.updateScore();
+    	this.updatePowerBar();
     	if(this.level<15&&this.score>=SCORE_LEVEL[this.level])this.levelUp();
     },
 	levelUp:function()
@@ -527,7 +532,7 @@ var GameLayer = cc.Layer.extend({
 
 		this.clearBoard();
 
-		this.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.CallFunc(this.putBlock,this)));
+		this.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.CallFunc(this.putBlocks,this)));
 	},
     updateScore:function()
     {

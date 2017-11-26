@@ -243,7 +243,7 @@ var GameLayer = cc.Layer.extend({
 	newGame:function()
 	{
 		console.log(this);
-		this.level = 9;
+		this.level = 1;
 		this.putBlocks();
 	},
 

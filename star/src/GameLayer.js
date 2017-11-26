@@ -243,7 +243,7 @@ var GameLayer = cc.Layer.extend({
 	newGame:function()
 	{
 		console.log(this);
-		this.level = 1;
+		this.level = 9;
 		this.putBlocks();
 	},
 
@@ -378,10 +378,10 @@ var GameLayer = cc.Layer.extend({
 	    			if(this.countTempArray[i][j] == 1)
 	    				{
 	    					this.hitBean(i,j);
-	    					if(i-1>=0&&this.beansArray[i-1][j]<=0)this.countTempArray[i-1][j]=-1;
-	    					if(j-1>=0&&this.beansArray[i][j-1]<=0)this.countTempArray[i][j-1]=-1;
-	    					if(i+1<BOARD_SIZE.width&&this.beansArray[i+1][j]<=0)this.countTempArray[i+1][j]=-1;
-	    					if(j+1<BOARD_SIZE.height&&this.beansArray[i][j+1]<=0)this.countTempArray[i][j+1]=-1;
+	    					if(i-1>=0&&this.beansArray[i-1][j]<0)this.countTempArray[i-1][j]=-1;
+	    					if(j-1>=0&&this.beansArray[i][j-1]<0)this.countTempArray[i][j-1]=-1;
+	    					if(i+1<BOARD_SIZE.width&&this.beansArray[i+1][j]<0)this.countTempArray[i+1][j]=-1;
+	    					if(j+1<BOARD_SIZE.height&&this.beansArray[i][j+1]<0)this.countTempArray[i][j+1]=-1;
 	    				}
 
 
@@ -390,60 +390,12 @@ var GameLayer = cc.Layer.extend({
 				{
 					if(this.countTempArray[i][j]==-1)
 					{
-						this.spriteArray[i][j].hit();
+						this.spriteArray[i][j].knock();
 					}
-	    			this.countTempArray[i][j] = 0;
 	    		}
 
-			for(var i=0;i<BOARD_SIZE.width;i++)
-				for(var j=0;j<BOARD_SIZE.height;j++)
-				{
-					if(this.beansArray[i][j]==0)
-					{
-						for(var k=j+1;k<BOARD_SIZE.height;k++)
-						{
-							this.countTempArray[i][k]++;
-						}
-					}
-				}
+	    	this.fillBoard();
 
-			for(var i=0;i<BOARD_SIZE.width;i++)
-			{
-				var effect = new cc.CallFunc(this.playDropEffect, this);
-				for(var j=0;j<BOARD_SIZE.height;j++)
-				{
-					if(this.beansArray[i][j]!=0&&this.countTempArray[i][j]!=0)
-					{
-						this.spriteArray[i][j].cy = j-this.countTempArray[i][j];
-						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
-						this.beansArray[i][j]=0;
-						var strength = 1.25 - j/BOARD_SIZE.height;
-						this.spriteArray[i][j].runAction(new cc.Sequence(
-							new cc.DelayTime((DROP_DURATION+(1-strength)*0.3)*(1-this.countTempArray[i][j]/BOARD_SIZE.height)),
-							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
-							effect,
-							new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.2*strength,1-0.07*strength)),
-							new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.05*strength,1+0.07*strength)),
-							new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1))
-							));
-						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
-						effect = new cc.DelayTime(0);
-					}
-				}
-			}
-
-			for(var i=0;i<BOARD_SIZE.width;i++)
-			{
-				this.effect = new cc.CallFunc(this.playDropEffect, this);
-				for(var j=0;j<BOARD_SIZE.height;j++)
-	    			if(this.beansArray[i][j] == 0)
-	    				{
-	    					this.putBallRandom(i,j);
-	    				}
-				this.effect = new cc.DelayTime(0);
-			}
-
-			console.log(this.comboTime);
 	    	if(this.comboTime<2){
 	    		this.getCombo();
 	    	}
@@ -514,6 +466,63 @@ var GameLayer = cc.Layer.extend({
     	if(inRange(x,y-1)&&this.countTempArray[x][y-1]==0&&this.beansArray[x][y-1]==this.beansArray[x][y]){
     		this.countNear(x,y-1);
     	}
+    },
+    fillBoard:function()
+    {
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+				for(var j=0;j<BOARD_SIZE.height;j++)
+				{
+	    			this.countTempArray[i][j] = 0;
+	    		}
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+				for(var j=0;j<BOARD_SIZE.height;j++)
+				{
+					if(this.beansArray[i][j]==0)
+					{
+						for(var k=j+1;k<BOARD_SIZE.height;k++)
+						{
+							this.countTempArray[i][k]++;
+						}
+					}
+				}
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+			{
+				var effect = new cc.CallFunc(this.playDropEffect, this);
+				for(var j=0;j<BOARD_SIZE.height;j++)
+				{
+					if(this.beansArray[i][j]!=0&&this.countTempArray[i][j]!=0)
+					{
+						this.spriteArray[i][j].cy = j-this.countTempArray[i][j];
+						this.beansArray[i][j-this.countTempArray[i][j]]=this.beansArray[i][j];
+						this.beansArray[i][j]=0;
+						var strength = 1.25 - j/BOARD_SIZE.height;
+						this.spriteArray[i][j].runAction(new cc.Sequence(
+							new cc.DelayTime((DROP_DURATION+(1-strength)*0.3)*(1-this.countTempArray[i][j]/BOARD_SIZE.height)),
+							new cc.EaseQuadraticActionIn(new cc.MoveBy(DROP_DURATION*this.countTempArray[i][j]/BOARD_SIZE.height,cc.p(0,-this.countTempArray[i][j]*BLOCK_SIZE.width))),
+							effect,
+							new cc.EaseSineOut(new cc.ScaleTo(0.16,1+0.2*strength,1-0.07*strength)),
+							new cc.EaseSineOut(new cc.ScaleTo(0.08,1-0.05*strength,1+0.07*strength)),
+							new cc.EaseSineOut(new cc.ScaleTo(0.05,1,1))
+							));
+						this.spriteArray[i][j-this.countTempArray[i][j]]=this.spriteArray[i][j];
+						effect = new cc.DelayTime(0);
+					}
+				}
+			}
+
+			for(var i=0;i<BOARD_SIZE.width;i++)
+			{
+				this.effect = new cc.CallFunc(this.playDropEffect, this);
+				for(var j=0;j<BOARD_SIZE.height;j++)
+	    			if(this.beansArray[i][j] == 0)
+	    				{
+	    					this.putBallRandom(i,j);
+	    				}
+				this.effect = new cc.DelayTime(0);
+			}
     },
     hitBean:function(x,y)
     {
@@ -613,6 +622,10 @@ var Bean = cc.Sprite.extend({
 		//this.setScale(0);
 		//this.runAction(new cc.Sequence(new cc.DelayTime(0.8),new cc.ScaleTo(0.2,1)));
 	},
+	knock:function()
+	{
+
+	},
 	hit:function()
 	{
 		_gameLayer.beansArray[this.cx][this.cy] = 0;
@@ -662,29 +675,38 @@ var IceBlock = cc.Node.extend({
 		if(this.item==-2)this.sp.setOpacity(128);
 
 	},
-	hit:function()
+	knock:function()
 	{
 		this.time--;
 		if(this.time==2)this.sp.setTexture("res/playpage_ico_ice_2.png");
 		if(this.time==1)this.sp.setTexture("res/playpage_ico_ice_3.png");
-		if(this.time==0)this.clash();
+		if(this.time==0)this.hit();
 	},
-	clash:function()
+	hit:function()
 	{
 		_gameLayer.beansArray[this.cx][this.cy] = 0;
 		if(this.item==-2)
 		{
-			for(var i=this.cx-1;i<=this.cx+1;i++)
+			this.runAction(new cc.Sequence(new cc.DelayTime(0.5),new cc.CallFunc(this.itemBomb,this)));
+		}
+		else
+		{
+			this.removeFromParent();
+		}
+	},
+	itemBomb:function()
+	{
+		for(var i=this.cx-1;i<=this.cx+1;i++)
+		{
+			for(var j=this.cy-1;j<=this.cy+1;j++)
 			{
-				for(var j=this.cy-1;j<=this.cy+1;j++)
+				if(_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
 				{
-					if(_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
-					{
-						_gameLayer.spriteArray[i][j].hit();
-					}
+					_gameLayer.spriteArray[i][j].hit();
 				}
 			}
 		}
+		_gameLayer.fillBoard();
 		this.removeFromParent();
 	},
 	explore:function()

@@ -6,14 +6,14 @@ var DROP_DURATION = 1;
 var SCORE_PER_BLOCK = 10;//单个方块消除分数
 var POWER_PER_BLOCK = 1;//单个方块消除能量
 var POWER_SPEED = 15;
-var SCORE_LEVEL = [0,1000,2500,4000,7500,10000,12000,15000,18000,20000,24000,30000];
+var SCORE_LEVEL = [0,1000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,30000];
 var SCORE_RATE_LEVEL = [1];
 var POWER_LEVEL = [30,30,40,50,50,50,50,50];//升级所需能量
 var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
 var COMBO_RATE = [1,1,2];//连击加成比率
 var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];//多消额外加分
 var ICE_BLOCK_TIME = 3;//冰块需打破次数
-var ICE_BLOCK_RATE = [0,0,5,10,10,12,12,15,25,0,20];//冰块出现概率随等级提高
+var ICE_BLOCK_RATE = [0,0,10,5,0,5,5,10,20,0,20];//冰块出现概率随等级提高
 
 var STAGE_MAP = [
 	[
@@ -65,7 +65,7 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,
+	0,0,0,0,0,0,0,
 	1,1,1,1,1,1,1,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
@@ -150,6 +150,7 @@ var GameLayer = cc.Layer.extend({
 	effect:null,
 	score:0,
 	combo:0,
+	comboTime:0,
 	level:1,
 	power:0,
 
@@ -218,6 +219,10 @@ var GameLayer = cc.Layer.extend({
 		this.addChild(this.boardNode);
 		this.newGame();
 
+		this.comboTag = new cc.Sprite("res/playpage_word_comboadd.png");
+		this.comboTag.setPosition(540,1700);
+		this.comboTag.setOpacity(0);
+		this.addChild(this.comboTag);
 
         cc.eventManager.addListener({
           event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -232,7 +237,7 @@ var GameLayer = cc.Layer.extend({
 	},
 	update:function(dt)
 	{
-
+		this.comboTime+=dt;
 	},
 
 	newGame:function()
@@ -438,7 +443,8 @@ var GameLayer = cc.Layer.extend({
 				this.effect = new cc.DelayTime(0);
 			}
 
-	    	if(this.count>=3){
+			console.log(this.comboTime);
+	    	if(this.comboTime<2){
 	    		this.getCombo();
 	    	}
 	    	else
@@ -516,12 +522,22 @@ var GameLayer = cc.Layer.extend({
     },
     getCombo:function()
     {
+    	this.comboTime = 0;
     	this.combo++;
-    	this.comboLabel.setString("X"+this.combo);
+    	if(this.combo>=2)
+    	{
+	    	this.comboLabel.setString("X"+this.combo);
+	    	this.comboTag.stopAllActions();
+	    	this.comboTag.setOpacity(255);
+	    	this.comboTag.setPosition(540,1650);
+	    	this.comboTag.setScale(1);
+	    	this.comboTag.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.25),new cc.DelayTime(0.6),new cc.FadeTo(0.8,0)));
+	    }
     },
     clearCombo:function()
     {
     	this.combo=0;
+    	this.comboTime = 0;
     	this.comboLabel.setString("X"+this.combo);
     },
     updatePowerBar:function(power)
@@ -552,9 +568,10 @@ var GameLayer = cc.Layer.extend({
 		));
 		this.addChild(levelUpBar);
 
-		this.clearBoard();
+		this.untouch = true;
 
-		this.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.CallFunc(this.putBlocks,this)));
+		this.runAction(new cc.Sequence(new cc.DelayTime(1.75),new cc.CallFunc(this.clearBoard,this)));
+		this.runAction(new cc.Sequence(new cc.DelayTime(3.5),new cc.CallFunc(this.putBlocks,this)));
 	},
     updateScore:function()
     {
@@ -564,6 +581,25 @@ var GameLayer = cc.Layer.extend({
     {
 		this.clearBoard();
 		this.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.CallFunc(this.newGame,this)));
+		this.level = 1;
+		this.levelLabel.setString(1);
+		this.combo = 0;
+		this.score = 0;
+		this.updateScore();
+		this.clearCombo();
+    },
+    gameOver:function()
+    {
+    	this.untouch = true;
+
+		for(var i=0;i<BOARD_SIZE.width;i++)
+		{
+			for(var j=0;j<BOARD_SIZE.height;j++)
+			{
+				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime(0.5+Math.random()*0.5),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),
+					new cc.CallFunc(this.spriteArray[i][j].explore,this.spriteArray[i][j])));
+			}
+		}
     }
 });
 
@@ -593,13 +629,19 @@ var Bean = cc.Sprite.extend({
         this.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.3),new cc.ScaleTo(0.1,1),new cc.DelayTime(0.4),new cc.ScaleTo(0.6,0.5)));
 
         this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.removeFromParent, this)));
-
+	},
+	explore:function()
+	{
+		this.scheduleUpdate();
+		this.vx = Math.random()*12-6;
+		this.vy = Math.random()*8+8;
 		this.scheduleUpdate();
 	},
 	update:function(dt)
 	{
-		this.t+=dt;
-		if(this.t>3)this.removeFromParent();
+		this.setPosition(this.getPosition().x+this.vx,this.getPosition().y+this.vy);
+		this.vy-=1;
+		if(this.getPosition().y<-300)this.removeFromParent();
 	}
 });
 
@@ -644,5 +686,18 @@ var IceBlock = cc.Node.extend({
 			}
 		}
 		this.removeFromParent();
+	},
+	explore:function()
+	{
+		this.scheduleUpdate();
+		this.vx = Math.random()*12-6;
+		this.vy = Math.random()*8+8;
+		this.scheduleUpdate();
+	},
+	update:function(dt)
+	{
+		this.setPosition(this.getPosition().x+this.vx,this.getPosition().y+this.vy);
+		this.vy-=1;
+		if(this.getPosition().y<-300)this.removeFromParent();
 	}
 });

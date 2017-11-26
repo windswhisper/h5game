@@ -487,7 +487,7 @@ var GameLayer = cc.Layer.extend({
 		    		case 5:
 			    		cc.audioEngine.playEffect("res/music/combo_5.mp3");
 			    		break;
-		    		default:
+			    	case 6:
 			    		cc.audioEngine.playEffect("res/music/combo_6.mp3");
 			    		break;
 		    	}

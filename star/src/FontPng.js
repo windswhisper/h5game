@@ -7,6 +7,9 @@ var FontPng = cc.Node.extend({
 
 		this.fontSize = size;
 
+		this.setScale(size/75);
+		this.setCascadeOpacityEnabled(true);
+
 		this.setString(text);
 	},
 	setString:function(text){

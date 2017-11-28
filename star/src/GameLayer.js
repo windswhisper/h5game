@@ -169,44 +169,42 @@ var GameLayer = cc.Layer.extend({
 		bgBoard.setPosition(540,960);
 		this.addChild(bgBoard);
 
-		var topView = new cc.Node();
-		topView.setPosition(0,200);
-		topView.runAction(new cc.EaseSineOut(new cc.MoveBy(0.4,cc.p(0,-200))));
-		this.addChild(topView);
+		this.topView = new cc.Node();
+		this.topView.setPosition(0,200);
+		this.addChild(this.topView);
 
 		var topBar = new cc.Sprite("res/playpage_Top.png");
 		topBar.setPosition(540,1827);
-		topView.addChild(topBar);
+		this.topView.addChild(topBar);
 
 		this.scoreLabel = new FontPng(75,0);
 		this.scoreLabel.setPosition(540,1870);
-		topView.addChild(this.scoreLabel);
+		this.topView.addChild(this.scoreLabel);
 
 		this.comboLabel = new FontPng(75,"X0");
 		this.comboLabel.setPosition(150,1870);
-		topView.addChild(this.comboLabel);
+		this.topView.addChild(this.comboLabel);
 
 		this.levelLabel = new FontPng(75,1);
 		this.levelLabel.setPosition(930,1870);
-		topView.addChild(this.levelLabel);
+		this.topView.addChild(this.levelLabel);
 
 
-		var bottomView = new cc.Node();
-		bottomView.setPosition(0,-200);
-		bottomView.runAction(new cc.EaseSineOut(new cc.MoveBy(0.4,cc.p(0,200))));
-		this.addChild(bottomView);
+		this.bottomView = new cc.Node();
+		this.bottomView.setPosition(0,-200);
+		this.addChild(this.bottomView);
 
 		var progressBg = new cc.Sprite("res/playpage_progress_bg.png");
 		progressBg.setPosition(540,140);
-		bottomView.addChild(progressBg); 
+		this.bottomView.addChild(progressBg); 
 
 		this.progressBar = new cc.Sprite("res/playpage_progress.png");
 		this.progressBar.setPosition(540,140);
-		bottomView.addChild(this.progressBar); 
+		this.bottomView.addChild(this.progressBar); 
 
 		this.btnPause = new cc.Sprite("res/btn_pause.png");
 		this.btnPause.setPosition(130,140);
-		bottomView.addChild(this.btnPause);
+		this.bottomView.addChild(this.btnPause);
 
 		for(var i=0;i<BOARD_SIZE.width;i++)
 		{
@@ -224,6 +222,8 @@ var GameLayer = cc.Layer.extend({
 		this.comboTag.setOpacity(0);
 		this.addChild(this.comboTag);
 
+		this.showBars();
+
         cc.eventManager.addListener({
           event: cc.EventListener.TOUCH_ONE_BY_ONE,
           swallowTouches: false,
@@ -239,11 +239,24 @@ var GameLayer = cc.Layer.extend({
 	{
 		this.comboTime+=dt;
 	},
-
+	showBars:function()
+	{
+		this.bottomView.runAction(new cc.EaseSineOut(new cc.MoveBy(0.4,cc.p(0,200))));
+		this.topView.runAction(new cc.EaseSineOut(new cc.MoveBy(0.4,cc.p(0,-200))));
+	},
+	hideBars:function()
+	{
+		this.bottomView.runAction(new cc.EaseSineOut(new cc.MoveBy(1,cc.p(0,-200))));
+		this.topView.runAction(new cc.EaseSineOut(new cc.MoveBy(1,cc.p(0,200))));
+	},
 	newGame:function()
 	{
-		console.log(this);
 		this.level = 1;
+		this.levelLabel.setString(1);
+		this.combo = 0;
+		this.score = 0;
+		this.updateScore();
+		this.clearCombo();
 		this.putBlocks();
 	},
 
@@ -350,8 +363,8 @@ var GameLayer = cc.Layer.extend({
 
         if(cc.pDistanceSQ(target.btnPause.getPosition(),p2)<2500)
         {
-        	target.addChild(new PauseLayer(target));
-               cc.audioEngine.playEffect("res/music/drop.mp3");
+        	target.addChild(new OverLayer(target));
+            cc.audioEngine.playEffect("res/music/drop.mp3");
         	target.pause();
         }
 
@@ -469,7 +482,6 @@ var GameLayer = cc.Layer.extend({
     },
     fillBoard:function()
     {
-
 			for(var i=0;i<BOARD_SIZE.width;i++)
 				for(var j=0;j<BOARD_SIZE.height;j++)
 				{
@@ -523,6 +535,28 @@ var GameLayer = cc.Layer.extend({
 	    				}
 				this.effect = new cc.DelayTime(0);
 			}
+
+			if(this.checkFail())this.gameOver();
+    },
+    checkFail:function()
+    {
+		for(var i=0;i<BOARD_SIZE.width;i++)
+			for(var j=0;j<BOARD_SIZE.height;j++)
+    			this.countTempArray[i][j] = 0;
+
+		for(var i=0;i<BOARD_SIZE.width;i++)
+			for(var j=0;j<BOARD_SIZE.height;j++)
+			{
+				if(this.beansArray[i][j]<0)continue;
+    			this.count = 0;
+				this.countNear(i,j);
+				if(this.count>1)
+				{
+					console.log(i+"-"+j);
+					return false;
+				}
+			}
+		return true;
     },
     hitBean:function(x,y)
     {
@@ -590,12 +624,6 @@ var GameLayer = cc.Layer.extend({
     {
 		this.clearBoard();
 		this.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.CallFunc(this.newGame,this)));
-		this.level = 1;
-		this.levelLabel.setString(1);
-		this.combo = 0;
-		this.score = 0;
-		this.updateScore();
-		this.clearCombo();
     },
     gameOver:function()
     {
@@ -605,10 +633,18 @@ var GameLayer = cc.Layer.extend({
 		{
 			for(var j=0;j<BOARD_SIZE.height;j++)
 			{
-				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime(0.5+Math.random()*0.5),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),
+				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime(2+Math.random()*0.5),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),new cc.EaseSineIn(new cc.MoveBy(0.05+Math.random()*0.05,cc.p(Math.random()*20-10,Math.random()*20-10))),
 					new cc.CallFunc(this.spriteArray[i][j].explore,this.spriteArray[i][j])));
 			}
 		}
+
+		this.runAction(new cc.Sequence(new cc.DelayTime(4),new cc.CallFunc(this.showOverLayer,this)));
+    },
+    showOverLayer:function()
+    {
+    	this.addChild(new OverLayer(this));
+    	this.hideBars();
+    
     }
 });
 

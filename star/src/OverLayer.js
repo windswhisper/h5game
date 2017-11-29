@@ -1,5 +1,7 @@
 var OverLayer = cc.Layer.extend({
 	gameLayer:null,
+	score:0,
+	scoreDisplay:0,
 	ctor:function(gameLayer)
 	{
 		this._super();
@@ -49,12 +51,29 @@ var OverLayer = cc.Layer.extend({
           onTouchMoved: this.onTouchMoved,
           onTouchEnded: this.onTouchEnded
         }, this);
+
+	    this.runAction(new cc.Sequence(new cc.DelayTime(2),new cc.CallFunc(this.scheduleUpdate,this)));
+	},
+	update:function(dt)
+	{
+	    this.scoreDisplay+=this.score/120;
+	    if(this.scoreDisplay>this.score)
+	    {
+	        this.unscheduleUpdate();
+	        this.scoreDisplay=this.score；
+	    }
+	    this.scoreLabel.setString(Math.floor(this.scoreDisplay));
 	},
     onTouchBegan:function(touch, event) 
     {
         var target = event.getCurrentTarget();
         var p = target.convertTouchToNodeSpace(touch);
 
+        target.btnContinue.setScale(1);
+        if(cc.pDistanceSQ(target.btnContinue.getPosition(),p)<10000)
+        {
+            target.btnContinue.setScale(0.8);
+        }
         return true;
     },
     onTouchMoved:function(touch, event) 
@@ -62,6 +81,11 @@ var OverLayer = cc.Layer.extend({
         var target = event.getCurrentTarget();
         var p = target.convertTouchToNodeSpace(touch);
 
+        target.btnContinue.setScale(1);
+        if(cc.pDistanceSQ(target.btnContinue.getPosition(),p)<10000)
+        {
+            target.btnContinue.setScale(0.8);
+        }
 
     },
     onTouchEnded:function(touch, event) 
@@ -69,12 +93,27 @@ var OverLayer = cc.Layer.extend({
         var target = event.getCurrentTarget();
         var p = target.convertTouchToNodeSpace(touch);
 
+        target.btnContinue.setScale(1);
 
         if(cc.pDistanceSQ(target.btnContinue.getPosition(),p)<10000)
         {
-            target.gameLayer.newGame();
-            target.gameLayer.showBars();
-            target.removeFromParent();
+            this.preRestart();
         }
+    },
+    preRestart:function()
+    {
+        this.title.runAction(new cc.FadeTo(1,0));
+        this.levelTitle.runAction(new cc.FadeTo(1,0));
+        this.levelLabel.runAction(new cc.FadeTo(1,0));
+        this.scoreTitle.runAction(new cc.FadeTo(1,0));
+        this.scoreLabel.runAction(new cc.FadeTo(1,0));
+
+        this.runAction(new cc.Sequence(new cc.DelayTime(2),new cc.CallFunc(this.restart,this)));
+    }
+    restart:function()
+    {
+        this.gameLayer.newGame();
+        this.gameLayer.showBars();
+        this.removeFromParent();
     }
 });

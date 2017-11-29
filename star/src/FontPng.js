@@ -23,6 +23,7 @@ var FontPng = cc.Node.extend({
 		{
 			var ch = text.charAt(i);
 			var sp = new cc.Sprite("res/font/"+ch+".png");
+			sp.setOpacity(this.getOpacity());
 			sp.setPosition(i*54-offset,0);
 			this.addChild(sp);
 		}

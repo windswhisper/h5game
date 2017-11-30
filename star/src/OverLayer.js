@@ -8,6 +8,8 @@ var OverLayer = cc.Layer.extend({
 
 		this.gameLayer = gameLayer;
 
+        this.score = gameLayer.score;
+
         this.title = new cc.Sprite("res/playpage_ico_gameover.png");
         this.title.setPosition(540,1300);
         this.title.runAction(new cc.Sequence(new cc.DelayTime(0),new cc.Spawn(new cc.MoveBy(0.5,cc.p(0,100)),new cc.FadeTo(0.5,255))));
@@ -52,15 +54,15 @@ var OverLayer = cc.Layer.extend({
           onTouchEnded: this.onTouchEnded
         }, this);
 
-	    this.runAction(new cc.Sequence(new cc.DelayTime(2),new cc.CallFunc(this.scheduleUpdate,this)));
+        this.schedule(this.updateScore,0.05,65536,2);
 	},
-	update:function(dt)
+	updateScore:function(dt)
 	{
-	    this.scoreDisplay+=this.score/120;
+	    this.scoreDisplay+=this.score/25;
 	    if(this.scoreDisplay>this.score)
 	    {
-	        this.unscheduleUpdate();
-	        this.scoreDisplay=this.score；
+            this.unschedule(this.updateScore);
+	        this.scoreDisplay=this.score;
 	    }
 	    this.scoreLabel.setString(Math.floor(this.scoreDisplay));
 	},
@@ -97,7 +99,7 @@ var OverLayer = cc.Layer.extend({
 
         if(cc.pDistanceSQ(target.btnContinue.getPosition(),p)<10000)
         {
-            this.preRestart();
+            target.preRestart();
         }
     },
     preRestart:function()
@@ -107,9 +109,10 @@ var OverLayer = cc.Layer.extend({
         this.levelLabel.runAction(new cc.FadeTo(1,0));
         this.scoreTitle.runAction(new cc.FadeTo(1,0));
         this.scoreLabel.runAction(new cc.FadeTo(1,0));
+        this.btnContinue.runAction(new cc.FadeTo(1,0));
 
         this.runAction(new cc.Sequence(new cc.DelayTime(2),new cc.CallFunc(this.restart,this)));
-    }
+    },
     restart:function()
     {
         this.gameLayer.newGame();

@@ -13,7 +13,7 @@ var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
 var COMBO_RATE = [1,1,2];//连击加成比率
 var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];//多消额外加分
 var ICE_BLOCK_TIME = 3;//冰块需打破次数
-var ICE_BLOCK_RATE = [0,80,10,5,0,5,5,10,20,0,20];//冰块出现概率随等级提高
+var ICE_BLOCK_RATE = [0,0,10,10,5,10,10,10,20,0,20];//冰块出现概率随等级提高
 
 var STAGE_MAP = [
 	[
@@ -125,6 +125,17 @@ var STAGE_MAP = [
 	1,2,1,1,1,2,1,
 	1,2,2,2,2,2,1,
 	1,1,1,1,1,1,1
+	],
+	[
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0
 	]
 ];
 
@@ -363,7 +374,7 @@ var GameLayer = cc.Layer.extend({
 
         if(cc.pDistanceSQ(target.btnPause.getPosition(),p2)<2500)
         {
-        	target.addChild(new OverLayer(target));
+        	target.addChild(new PauseLayer(target));
             cc.audioEngine.playEffect("res/music/drop.mp3");
         	target.pause();
         }

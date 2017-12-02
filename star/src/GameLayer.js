@@ -731,6 +731,9 @@ var IceBlock = cc.Node.extend({
 		if(this.time==1)this.sp.setTexture("res/playpage_ico_ice_3.png");
 		if(this.time==0)this.hit();
 
+
+		cc.audioEngine.playEffect("res/music/ice_clash.mp3");
+
 		var iceParticle = new ParticleFactory();
 		iceParticle.setPosition(this.getPosition());
 		_gameLayer.boardNode.addChild(iceParticle);

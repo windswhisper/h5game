@@ -690,7 +690,16 @@ var Bean = cc.Sprite.extend({
 
         this.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.3),new cc.ScaleTo(0.1,1),new cc.DelayTime(0.4),new cc.ScaleTo(0.6,0.5)));
 
-        this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.removeFromParent, this)));
+        this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.clashStar, this)));
+	},
+	clashStar:function()
+	{
+		var starParticle = new ParticleFactory();
+		starParticle.createStarEffect();
+		starParticle.setPosition(this.getPosition());
+		_gameLayer.boardNode.addChild(starParticle);
+
+		this.removeFromParent();
 	},
 	explore:function()
 	{
@@ -735,6 +744,7 @@ var IceBlock = cc.Node.extend({
 		cc.audioEngine.playEffect("res/music/ice_clash.mp3");
 
 		var iceParticle = new ParticleFactory();
+		iceParticle.createIceEffect();
 		iceParticle.setPosition(this.getPosition());
 		_gameLayer.boardNode.addChild(iceParticle);
 		dx = 16*Math.random()-8;

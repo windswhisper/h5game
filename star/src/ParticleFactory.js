@@ -3,6 +3,9 @@ var ParticleFactory = cc.Node.extend({
 	{
 		this._super();
 
+	},
+	createIceEffect:function()
+	{
 		for(var i=0;i<5;i++)
 		{
 			this.addChild(new IceParticle());
@@ -10,7 +13,15 @@ var ParticleFactory = cc.Node.extend({
 
 		this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.removeFromParent,this)));
 	},
+	createStarEffect:function()
+	{
+		for(var i=0;i<5;i++)
+		{
+			this.addChild(new StarParticle());
+		}
 
+		this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.removeFromParent,this)));
+	}
 });
 
 var IceParticle = cc.Node.extend({
@@ -25,7 +36,7 @@ var IceParticle = cc.Node.extend({
 		this.setRotation(Math.random()*360);
 		this.setScale(Math.random()*1+0.5,Math.random()*1+0.5);
 
-		this.sp = new cc.Sprite("res/playpage_ico_ice_particle.png");
+		this.sp = new cc.Sprite("res/ani/playpage_ico_ice_particle.png");
 
 		this.addChild(this.sp);
 
@@ -38,5 +49,26 @@ var IceParticle = cc.Node.extend({
 	{
 		this.vy-=1;
 		this.setPosition(this.getPosition().x+this.vx,this.getPosition().y+this.vy);
+	}
+});
+
+
+var StarParticle = cc.Node.extend({
+	ctor:function()
+	{
+		this._super();
+
+		this.setPosition(Math.random()*20-10,Math.random()*20-10);
+		this.setRotation(Math.random()*360);
+
+		this.sp = new cc.Sprite("res/ani/playpage_point_3.png");
+
+		this.addChild(this.sp);
+
+		this.runAction(new cc.EaseQuadraticActionOut(new cc.MoveBy(0.5,cc.p(Math.random()*300-150,Math.random()*300-150))));
+
+		this.runAction(new cc.RotateBy(0.5,Math.random()*1000-5000));
+
+		this.sp.runAction(new cc.FadeTo(0.5,0));
 	}
 });

@@ -74,24 +74,24 @@ var STAGE_MAP = [
 	[
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
+	0,1,1,1,1,1,0,
+	0,1,1,1,1,1,0,
 	0,0,0,0,0,0,0,
+	0,1,1,1,1,1,0,
+	0,1,1,1,1,1,0,
 	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1
+	0,0,0,0,0,0,0
 	],
 	[
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	1,0,0,0,0,0,1,
-	1,1,0,0,0,1,1,
-	1,1,1,0,1,1,1,
 	1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,
+	0,1,1,1,1,1,0,
+	0,0,1,1,1,0,0,
+	0,0,0,1,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0
 	],
 	[
 	0,0,0,0,0,0,0,
@@ -266,7 +266,7 @@ var GameLayer = cc.Layer.extend({
 		this.levelLabel.setString(1);
 		this.combo = 0;
 		this.score = 0;
-		this.updateScore();
+		this.scoreLabel.setString(0);
 		this.clearCombo();
 		this.putBlocks();
 	},
@@ -606,7 +606,6 @@ var GameLayer = cc.Layer.extend({
     getScore:function(s)
     {
     	this.score+=Math.floor(s);
-    	this.updateScore();
     	this.updatePowerBar();
     	if(this.level<15&&this.score>=SCORE_LEVEL[this.level])this.levelUp();
     },
@@ -631,7 +630,9 @@ var GameLayer = cc.Layer.extend({
 	},
     updateScore:function()
     {
-    	this.scoreLabel.setString(this.score);;
+    	this.scoreLabel.setString(this.score);
+    	this.scoreLabel.stopAllActions();
+    	this.scoreLabel.runAction(new cc.Sequence(new cc.EaseSineIn( new cc.ScaleTo(0.05,1.2)),new cc.EaseSineIn( new cc.ScaleTo(0.1,1))));
     },
     restart:function()
     {
@@ -698,7 +699,7 @@ var Bean = cc.Sprite.extend({
 		starParticle.createStarEffect();
 		starParticle.setPosition(this.getPosition());
 		_gameLayer.boardNode.addChild(starParticle);
-
+		_gameLayer.updateScore();
 		this.removeFromParent();
 	},
 	explore:function()

@@ -734,9 +734,9 @@ var IceBlock = cc.Node.extend({
 		var iceParticle = new ParticleFactory();
 		iceParticle.setPosition(this.getPosition());
 		_gameLayer.boardNode.addChild(iceParticle);
-	//	dx = 16*Math.random()-8;
-	//	dy = 16*Math.random()-8;
-	//	this.runAction(new cc.Sequence(new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(-2*dx,-2*dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy)))));
+		dx = 16*Math.random()-8;
+		dy = 16*Math.random()-8;
+		this.runAction(new cc.Sequence(new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(-2*dx,-2*dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy)))));
 	},
 	hit:function()
 	{

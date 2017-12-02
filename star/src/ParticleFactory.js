@@ -8,7 +8,7 @@ var ParticleFactory = cc.Node.extend({
 			this.addChild(new IceParticle());
 		}
 
-		this.runAction(new cc.Sequence(new cc.DelayTime(0.4),new cc.CallFunc(this.removeFromParent,this)));
+		this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.removeFromParent,this)));
 	},
 
 });

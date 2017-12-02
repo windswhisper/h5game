@@ -60,6 +60,7 @@ var StarParticle = cc.Node.extend({
 
 		this.setPosition(Math.random()*20-10,Math.random()*20-10);
 		this.setRotation(Math.random()*360);
+		this.setScale(2);
 
 		this.sp = new cc.Sprite("res/ani/playpage_point_3.png");
 

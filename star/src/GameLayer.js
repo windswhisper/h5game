@@ -6,7 +6,7 @@ var DROP_DURATION = 1;
 var SCORE_PER_BLOCK = 10;//单个方块消除分数
 var POWER_PER_BLOCK = 1;//单个方块消除能量
 var POWER_SPEED = 15;
-var SCORE_LEVEL = [0,1000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,30000];
+var SCORE_LEVEL = [0,1000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,30000];//过关需要分数
 var SCORE_RATE_LEVEL = [1];
 var POWER_LEVEL = [30,30,40,50,50,50,50,50];//升级所需能量
 var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
@@ -389,6 +389,8 @@ var GameLayer = cc.Layer.extend({
     },
     clickxy:function(x,y)
     {
+    	if(x<0||x>=BOARD_SIZE.width)return;
+    	if(y<0||y>=BOARD_SIZE.height)return;
     	if(this.beansArray[x][y]<=0)return;
     	this.count = 0;
 		for(var i=0;i<BOARD_SIZE.width;i++)
@@ -728,6 +730,13 @@ var IceBlock = cc.Node.extend({
 		if(this.time==2)this.sp.setTexture("res/playpage_ico_ice_2.png");
 		if(this.time==1)this.sp.setTexture("res/playpage_ico_ice_3.png");
 		if(this.time==0)this.hit();
+
+		var iceParticle = new ParticleFactory();
+		iceParticle.setPosition(this.getPosition());
+		_gameLayer.boardNode.addChild(iceParticle);
+	//	dx = 16*Math.random()-8;
+	//	dy = 16*Math.random()-8;
+	//	this.runAction(new cc.Sequence(new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(-2*dx,-2*dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy)))));
 	},
 	hit:function()
 	{

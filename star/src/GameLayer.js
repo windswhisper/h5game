@@ -763,13 +763,13 @@ var IceBlock = cc.Node.extend({
 	},
 	hit:function()
 	{
-		_gameLayer.beansArray[this.cx][this.cy] = 0;
 		if(this.item==-2)
 		{
-			this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.itemBomb,this)));
+			this.runAction(new cc.Sequence(new cc.DelayTime(1.3),new cc.CallFunc(this.itemBomb,this)));
 		}
 		else
 		{
+			_gameLayer.beansArray[this.cx][this.cy] = 0;
 			this.removeFromParent();
 		}
 	},
@@ -785,6 +785,7 @@ var IceBlock = cc.Node.extend({
 				}
 			}
 		}
+		_gameLayer.beansArray[this.cx][this.cy] = 0;
 		_gameLayer.fillBoard();
 		this.removeFromParent();
 	},

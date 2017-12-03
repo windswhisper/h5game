@@ -703,7 +703,7 @@ var Bean = cc.Sprite.extend({
 	clashStar:function()
 	{
 		var starParticle = new ParticleFactory();
-		starParticle.createStarEffect();
+		starParticle.createStarEffect(3);
 		starParticle.setPosition(this.getPosition());
 		_gameLayer.boardNode.addChild(starParticle);
 		_gameLayer.updateScore();
@@ -740,7 +740,12 @@ var IceBlock = cc.Node.extend({
 		this.addChild(this.sp);
 
 		this.item = item;
-		if(this.item==-2)this.sp.setOpacity(128);
+		if(this.item==-2)
+		{
+			this.itemSp = new cc.Sprite("res/playpage_chess_bomb.png");
+
+			this.addChild(this.itemSp,-1);
+		}
 
 	},
 	knock:function()
@@ -749,29 +754,43 @@ var IceBlock = cc.Node.extend({
 		if(this.time==2)this.sp.setTexture("res/playpage_ico_ice_2.png");
 		if(this.time==1)this.sp.setTexture("res/playpage_ico_ice_3.png");
 		if(this.time==0)this.hit();
-
+		else
+		{
+			var iceParticle = new ParticleFactory();
+			iceParticle.createIceEffect(7-this.time*2);
+			iceParticle.setPosition(this.getPosition());
+			_gameLayer.boardNode.addChild(iceParticle);
+			dx = 16*Math.random()-8;
+			dy = 16*Math.random()-8;
+			this.runAction(new cc.Sequence(new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(-2*dx,-2*dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy)))));
+	
+		}
 
 		cc.audioEngine.playEffect("res/music/ice_clash.mp3");
-
-		var iceParticle = new ParticleFactory();
-		iceParticle.createIceEffect();
-		iceParticle.setPosition(this.getPosition());
-		_gameLayer.boardNode.addChild(iceParticle);
-		dx = 16*Math.random()-8;
-		dy = 16*Math.random()-8;
-		this.runAction(new cc.Sequence(new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(-2*dx,-2*dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy)))));
+		
 	},
 	hit:function()
 	{
 		if(this.item==-2)
 		{
 			this.runAction(new cc.Sequence(new cc.DelayTime(1.3),new cc.CallFunc(this.itemBomb,this)));
+			this.sp.removeFromParent();
+			this.itemSp.runAction(new cc.Sequence(new cc.ScaleTo(0.4,1.05),new cc.ScaleTo(0.4,0.9),new cc.ScaleTo(0.5,1.2)));
 		}
 		else
 		{
 			_gameLayer.beansArray[this.cx][this.cy] = 0;
 			this.removeFromParent();
 		}
+
+		var iceParticle = new ParticleFactory();
+		iceParticle.createIceEffect(7);
+		iceParticle.setPosition(this.getPosition());
+		_gameLayer.boardNode.addChild(iceParticle);
+		dx = 16*Math.random()-8;
+		dy = 16*Math.random()-8;
+		this.runAction(new cc.Sequence(new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(-2*dx,-2*dy))),new cc.EaseSineIn(new cc.MoveBy(0.05,cc.p(dx,dy)))));
+	
 	},
 	itemBomb:function()
 	{
@@ -781,10 +800,17 @@ var IceBlock = cc.Node.extend({
 			{
 				if(_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
 				{
+					if(i==this.cx&&j==this.cy)continue;
 					_gameLayer.spriteArray[i][j].hit();
 				}
 			}
 		}
+
+		var bomoParticle = new ParticleFactory();
+		bomoParticle.createStarEffect(10);
+		bomoParticle.setPosition(this.getPosition());
+		_gameLayer.boardNode.addChild(bomoParticle);
+
 		_gameLayer.beansArray[this.cx][this.cy] = 0;
 		_gameLayer.fillBoard();
 		this.removeFromParent();

@@ -4,18 +4,18 @@ var ParticleFactory = cc.Node.extend({
 		this._super();
 
 	},
-	createIceEffect:function()
+	createIceEffect:function(num)
 	{
-		for(var i=0;i<5;i++)
+		for(var i=0;i<num;i++)
 		{
 			this.addChild(new IceParticle());
 		}
 
 		this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.removeFromParent,this)));
 	},
-	createStarEffect:function()
+	createStarEffect:function(num)
 	{
-		for(var i=0;i<5;i++)
+		for(var i=0;i<num;i++)
 		{
 			this.addChild(new StarParticle());
 		}

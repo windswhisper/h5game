@@ -161,6 +161,7 @@ var GameLayer = cc.Layer.extend({
 	effect:null,
 	score:0,
 	scoreDisplay:0,
+	powerDisplay:0,
 	combo:0,
 	comboTime:0,
 	level:1,
@@ -254,8 +255,8 @@ var GameLayer = cc.Layer.extend({
 		{
 			this.scoreDisplay+=Math.ceil((this.score-this.scoreDisplay)/30);
     		this.scoreLabel.setString(this.scoreDisplay);
-    		this.updatePowerBar();
     	}
+    		this.updatePowerBar();
 	},
 	showBars:function()
 	{
@@ -288,7 +289,7 @@ var GameLayer = cc.Layer.extend({
 		{
 			for(var j=0;j<BOARD_SIZE.height;j++)
 			{
-				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime((BOARD_SIZE.height-j-1)*0.1),new cc.Spawn(new cc.FadeTo(0.5,0),new cc.EaseSineOut(new cc.ScaleTo(0.5,0))),
+				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime((BOARD_SIZE.height-j-1)*0.1),new cc.Spawn(new cc.FadeTo(0.3,0),new cc.EaseQuadraticActionOut(new cc.ScaleTo(0.5,0))),
 					new cc.CallFunc(this.spriteArray[i][j].removeFromParent,this.spriteArray[i][j])));
 			}
 		}
@@ -481,9 +482,7 @@ var GameLayer = cc.Layer.extend({
 		    if(this.power>1)this.power=1;
 
 		    var s = (SCORE_PER_BLOCK*this.count*arv(COMBO_RATE,this.combo) + arv(SCORE_EXTRA,this.count))*arv(SCORE_RATE_LEVEL,this.level);
-		    this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(function(){
-		    	_gameLayer.getScore(s);
-		    })));
+		    this.getScore(s);
     	}
     },
     countNear:function(x,y){
@@ -606,9 +605,12 @@ var GameLayer = cc.Layer.extend({
     },
     updatePowerBar:function(power)
     {
-    	var progress = (this.scoreDisplay-SCORE_LEVEL[this.level-1])/(SCORE_LEVEL[this.level]-SCORE_LEVEL[this.level-1]);
-    	if(progress>1)progress=1;
-		this.progressBar.setTextureRect(cc.rect(829*(1-progress),0,828,105));
+    	var progress = (this.score-SCORE_LEVEL[this.level-1])/(SCORE_LEVEL[this.level]-SCORE_LEVEL[this.level-1]);
+
+    	this.powerDisplay+=(progress-this.powerDisplay)/50;
+    	if(this.powerDisplay>1)this.powerDisplay=1;
+    	if(this.powerDisplay<0)this.powerDisplay=0;
+		this.progressBar.setTextureRect(cc.rect(829*(1-this.powerDisplay),0,828,105));
     },
     getScore:function(s)
     {

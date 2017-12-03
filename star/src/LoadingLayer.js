@@ -93,7 +93,7 @@ var LoadingLayer = cc.Layer.extend({
 		        var p = target.convertTouchToNodeSpace(touch);
 
 	           	target.btnStart.setOpacity(255);
-	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
+	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<20000)
 	            {
 	            	target.btnStart.setOpacity(160);
 	            }
@@ -105,7 +105,7 @@ var LoadingLayer = cc.Layer.extend({
 	            
 	           	target.btnStart.setOpacity(255);
 
-	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
+	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<20000)
 	            {
 	            	target.btnStart.setOpacity(160);
 	            }
@@ -116,7 +116,7 @@ var LoadingLayer = cc.Layer.extend({
 
 	           	target.btnStart.setOpacity(255);
 
-	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<6000)
+	            if(cc.pDistanceSQ(target.btnStart.getPosition(),p)<20000)
 	            {
 		          	target.startGame();
 					cc.audioEngine.playEffect("res/music/drop.mp3");

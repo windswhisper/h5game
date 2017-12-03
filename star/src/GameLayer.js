@@ -31,12 +31,12 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0
+	1,2,1,1,1,2,1,
+	1,1,1,1,1,1,1,
+	1,2,1,1,1,2,1,
+	1,2,1,1,1,2,1,
+	1,2,2,2,2,2,1,
+	1,1,1,1,1,1,1
 	],
 	[
 	0,0,0,0,0,0,0,
@@ -764,7 +764,7 @@ var IceBlock = cc.Node.extend({
 		_gameLayer.beansArray[this.cx][this.cy] = 0;
 		if(this.item==-2)
 		{
-			this.runAction(new cc.Sequence(new cc.DelayTime(0.5),new cc.CallFunc(this.itemBomb,this)));
+			this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.itemBomb,this)));
 		}
 		else
 		{

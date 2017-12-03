@@ -733,6 +733,8 @@ var IceBlock = cc.Node.extend({
 
 		this.time = ICE_BLOCK_TIME;
 
+		this.setCascadeOpacityEnabled(true);
+
 		this.sp = new cc.Sprite("res/playpage_ico_ice_1.png");
 
 		this.addChild(this.sp);

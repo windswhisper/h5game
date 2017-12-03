@@ -288,7 +288,7 @@ var GameLayer = cc.Layer.extend({
 		{
 			for(var j=0;j<BOARD_SIZE.height;j++)
 			{
-				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime((BOARD_SIZE.height-j-1)*0.1),new cc.EaseSineIn(new cc.ScaleTo(0.5,0)),
+				this.spriteArray[i][j].runAction(new cc.Sequence(new cc.DelayTime((BOARD_SIZE.height-j-1)*0.1),new cc.Spawn(new cc.FadeTo(0.5,0),new cc.EaseSineOut(new cc.ScaleTo(0.5,0))),
 					new cc.CallFunc(this.spriteArray[i][j].removeFromParent,this.spriteArray[i][j])));
 			}
 		}
@@ -574,7 +574,6 @@ var GameLayer = cc.Layer.extend({
 				this.countNear(i,j);
 				if(this.count>1)
 				{
-					console.log(i+"-"+j);
 					return false;
 				}
 			}

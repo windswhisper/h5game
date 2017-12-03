@@ -13,7 +13,7 @@ var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
 var COMBO_RATE = [1,1,2];//连击加成比率
 var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];//多消额外加分
 var ICE_BLOCK_TIME = 3;//冰块需打破次数
-var ICE_BLOCK_RATE = [0,0,10,10,5,10,10,10,20,0,20];//冰块出现概率随等级提高
+var ICE_BLOCK_RATE = [0,0,10,10,10,5,10,10,20,0,20];//冰块出现概率随等级提高
 
 var STAGE_MAP = [
 	[
@@ -160,6 +160,7 @@ var GameLayer = cc.Layer.extend({
 	untouch:false,
 	effect:null,
 	score:0,
+	scoreDisplay:0,
 	combo:0,
 	comboTime:0,
 	level:1,
@@ -249,6 +250,12 @@ var GameLayer = cc.Layer.extend({
 	update:function(dt)
 	{
 		this.comboTime+=dt;
+		if(this.scoreDisplay<this.score)
+		{
+			this.scoreDisplay+=Math.ceil((this.score-this.scoreDisplay)/30);
+    		this.scoreLabel.setString(this.scoreDisplay);
+    		this.updatePowerBar();
+    	}
 	},
 	showBars:function()
 	{
@@ -266,9 +273,11 @@ var GameLayer = cc.Layer.extend({
 		this.levelLabel.setString(1);
 		this.combo = 0;
 		this.score = 0;
+		this.scoreDisplay = 0;
 		this.scoreLabel.setString(0);
 		this.clearCombo();
 		this.putBlocks();
+		this.updatePowerBar();
 	},
 
 	clearBoard:function()
@@ -306,7 +315,6 @@ var GameLayer = cc.Layer.extend({
 			}
 		}
 
-    	this.updatePowerBar();
 	},
 	putBallRandom:function(x,y)
 	{
@@ -471,10 +479,11 @@ var GameLayer = cc.Layer.extend({
 		    	}
 		    this.power+=this.count*POWER_PER_BLOCK;
 		    if(this.power>1)this.power=1;
-		    this.updatePowerBar();
 
 		    var s = (SCORE_PER_BLOCK*this.count*arv(COMBO_RATE,this.combo) + arv(SCORE_EXTRA,this.count))*arv(SCORE_RATE_LEVEL,this.level);
-		    this.getScore(s);
+		    this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(function(){
+		    	_gameLayer.getScore(s);
+		    })));
     	}
     },
     countNear:function(x,y){
@@ -598,15 +607,13 @@ var GameLayer = cc.Layer.extend({
     },
     updatePowerBar:function(power)
     {
-    	var progress = (this.score-SCORE_LEVEL[this.level-1])/(SCORE_LEVEL[this.level]-SCORE_LEVEL[this.level-1]);
+    	var progress = (this.scoreDisplay-SCORE_LEVEL[this.level-1])/(SCORE_LEVEL[this.level]-SCORE_LEVEL[this.level-1]);
     	if(progress>1)progress=1;
-		this.progressBar.setPosition(540,140);
 		this.progressBar.setTextureRect(cc.rect(829*(1-progress),0,828,105));
     },
     getScore:function(s)
     {
     	this.score+=Math.floor(s);
-    	this.updatePowerBar();
     	if(this.level<15&&this.score>=SCORE_LEVEL[this.level])this.levelUp();
     },
 	levelUp:function()
@@ -630,7 +637,6 @@ var GameLayer = cc.Layer.extend({
 	},
     updateScore:function()
     {
-    	this.scoreLabel.setString(this.score);
     	this.scoreLabel.stopAllActions();
     	this.scoreLabel.runAction(new cc.Sequence(new cc.EaseSineIn( new cc.ScaleTo(0.05,1.2)),new cc.EaseSineIn( new cc.ScaleTo(0.1,1))));
     },

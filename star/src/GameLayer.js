@@ -31,9 +31,9 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,
+	0,0,2,0,0,0,0,
+	0,0,2,0,0,0,0,
+	0,0,2,0,0,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0
@@ -805,6 +805,8 @@ var IceBlock = cc.Node.extend({
 				}
 			}
 		}
+
+		cc.audioEngine.playEffect("res/music/bomb.mp3");
 
 		var bomoParticle = new ParticleFactory();
 		bomoParticle.createStarEffect(10);

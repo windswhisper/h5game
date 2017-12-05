@@ -238,6 +238,8 @@ var GameLayer = cc.Layer.extend({
 
 		this.showBars();
 
+		this.untouch = true;
+
         cc.eventManager.addListener({
           event: cc.EventListener.TOUCH_ONE_BY_ONE,
           swallowTouches: false,
@@ -298,7 +300,7 @@ var GameLayer = cc.Layer.extend({
 
 	putBlocks:function()
 	{
-		this.untouch = false;
+		this.runAction(new cc.Sequence(new cc.DelayTime(1.2),new cc.CallFunc(function(){_gameLayer.untouch=false})));
 
 		for(var i=0;i<BOARD_SIZE.width;i++)
 		{
@@ -803,7 +805,7 @@ var IceBlock = cc.Node.extend({
 		{
 			for(var j=this.cy-1;j<=this.cy+1;j++)
 			{
-				if(_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
+				if(inRange(i,j)&&_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
 				{
 					if(i==this.cx&&j==this.cy)continue;
 					_gameLayer.spriteArray[i][j].hit();

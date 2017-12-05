@@ -447,31 +447,19 @@ var GameLayer = cc.Layer.extend({
 	    	}
 
 			if(this.count>=2)
-		    	switch(this.count)
+		    	switch(this.count%2)
 		    	{
-		    		case 2:
+		    		case 0:
 			    		cc.audioEngine.playEffect("res/music/hit_2.mp3");
 			    		break;
-		    		case 3:
+		    		case 1:
 			    		cc.audioEngine.playEffect("res/music/hit_3.mp3");
-			    		break;
-		    		case 4:
-			    		cc.audioEngine.playEffect("res/music/hit_4.mp3");
-			    		break;
-		    		case 5:
-			    		cc.audioEngine.playEffect("res/music/hit_5.mp3");
-			    		break;
-		    		default:
-			    		cc.audioEngine.playEffect("res/music/hit_6.mp3");
 			    		break;
 		    	}
 
 			if(this.combo>=2)
-		    	switch(this.combo)
+		    	switch(this.combo%5)
 		    	{
-		    		case 2:
-			    		cc.audioEngine.playEffect("res/music/combo_2.mp3");
-			    		break;
 		    		case 3:
 			    		cc.audioEngine.playEffect("res/music/combo_3.mp3");
 			    		break;
@@ -480,9 +468,6 @@ var GameLayer = cc.Layer.extend({
 			    		break;
 		    		case 5:
 			    		cc.audioEngine.playEffect("res/music/combo_5.mp3");
-			    		break;
-			    	case 6:
-			    		cc.audioEngine.playEffect("res/music/combo_6.mp3");
 			    		break;
 		    	}
 		    this.power+=this.count*POWER_PER_BLOCK;
@@ -626,8 +611,11 @@ var GameLayer = cc.Layer.extend({
     },
 	levelUp:function()
 	{
-		this.level++;
-		this.levelLabel.setString(this.level);
+
+		this.runAction(new cc.Sequence(new cc.DelayTime(3),new cc.CallFunc(function(){
+			_gameLayer.level++;
+			_gameLayer.levelLabel.setString(_gameLayer.level);
+		})));
 		var levelUpBar = new cc.Sprite("res/playpage_word_levelup.png");
 		levelUpBar.setPosition(540,880);
 		levelUpBar.setOpacity(0);

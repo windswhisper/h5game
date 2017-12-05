@@ -54,6 +54,8 @@ var OverLayer = cc.Layer.extend({
           onTouchEnded: this.onTouchEnded
         }, this);
 
+        cc.audioEngine.playEffect("res/music/game_over.mp3");
+
         this.schedule(this.updateScore,0.05,65536,2);
 	},
 	updateScore:function(dt)
@@ -99,6 +101,7 @@ var OverLayer = cc.Layer.extend({
 
         if(cc.pDistanceSQ(target.btnContinue.getPosition(),p)<10000)
         {
+            cc.audioEngine.playEffect("res/music/drop.mp3");
             target.preRestart();
         }
     },

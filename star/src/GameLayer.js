@@ -460,13 +460,13 @@ var GameLayer = cc.Layer.extend({
 			if(this.combo>=2)
 		    	switch(this.combo%5)
 		    	{
-		    		case 3:
+		    		case 2:
 			    		cc.audioEngine.playEffect("res/music/combo_3.mp3");
 			    		break;
-		    		case 4:
+		    		case 3:
 			    		cc.audioEngine.playEffect("res/music/combo_4.mp3");
 			    		break;
-		    		case 5:
+		    		case 4:
 			    		cc.audioEngine.playEffect("res/music/combo_5.mp3");
 			    		break;
 		    	}

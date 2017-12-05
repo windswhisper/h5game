@@ -602,7 +602,9 @@ var GameLayer = cc.Layer.extend({
     	this.powerDisplay+=(progress-this.powerDisplay)/50;
     	if(this.powerDisplay>1)this.powerDisplay=1;
     	if(this.powerDisplay<0)this.powerDisplay=0;
-		this.progressBar.setTextureRect(cc.rect(829*(1-this.powerDisplay),0,828,105));
+
+		this.progressBar.setPosition(540-828/2*(1-this.powerDisplay),140);
+		this.progressBar.setTextureRect(cc.rect(0,0,828*this.powerDisplay,105));
     },
     getScore:function(s)
     {

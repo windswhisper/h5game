@@ -213,7 +213,7 @@ var GameLayer = cc.Layer.extend({
 		this.bottomView.addChild(progressBg); 
 
 		this.progressBar = new cc.Sprite("res/playpage_progress.png");
-		this.progressBar.setPosition(540,125);
+		this.progressBar.setPosition(540,140);
 		this.bottomView.addChild(this.progressBar); 
 
 		this.btnPause = new cc.Sprite("res/btn_pause.png");
@@ -603,8 +603,8 @@ var GameLayer = cc.Layer.extend({
     	if(this.powerDisplay>1)this.powerDisplay=1;
     	if(this.powerDisplay<0)this.powerDisplay=0;
 
-		this.progressBar.setPosition(540-818/2*(1-this.powerDisplay),125);
-		this.progressBar.setTextureRect(cc.rect(0,0,818*this.powerDisplay,100));
+		this.progressBar.setPosition(540-791/2*(1-this.powerDisplay),140);
+		this.progressBar.setTextureRect(cc.rect(0,0,791*this.powerDisplay,66));
     },
     getScore:function(s)
     {

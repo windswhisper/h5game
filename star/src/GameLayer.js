@@ -446,28 +446,22 @@ var GameLayer = cc.Layer.extend({
 	    		this.clearCombo();
 	    	}
 
-			if(this.count>=2)
-		    	switch(this.count%2)
+
+		    	switch(this.combo)
 		    	{
-		    		case 0:
+		    		case 1:
+		    		case 2:
+		    		case 3:
 			    		cc.audioEngine.playEffect("res/music/hit_2.mp3");
 			    		break;
-		    		case 1:
+		    		case 4:
+		    		case 5:
+		    		case 6:
+		    		case 7:
 			    		cc.audioEngine.playEffect("res/music/hit_3.mp3");
 			    		break;
-		    	}
-
-			if(this.combo>=2)
-		    	switch(this.combo%8)
-		    	{
-		    		case 3:
-			    		cc.audioEngine.playEffect("res/music/combo_3.mp3");
-			    		break;
-		    		case 5:
-			    		cc.audioEngine.playEffect("res/music/combo_4.mp3");
-			    		break;
-		    		case 7:
-			    		cc.audioEngine.playEffect("res/music/combo_5.mp3");
+		    		default:
+			    		cc.audioEngine.playEffect("res/music/hit_4.mp3");
 			    		break;
 		    	}
 		    this.power+=this.count*POWER_PER_BLOCK;

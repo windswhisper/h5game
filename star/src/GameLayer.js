@@ -161,6 +161,7 @@ var GameLayer = cc.Layer.extend({
 	untouch:false,
 	effect:null,
 	score:0,
+	realScore:0,
 	scoreDisplay:0,
 	powerDisplay:0,
 	combo:0,
@@ -277,6 +278,7 @@ var GameLayer = cc.Layer.extend({
 		this.levelLabel.setString(1);
 		this.combo = 0;
 		this.score = 0;
+		this.realScore = 0;
 		this.scoreDisplay = 0;
 		this.scoreLabel.setString(0);
 		this.clearCombo();
@@ -574,6 +576,10 @@ var GameLayer = cc.Layer.extend({
     	if(this.combo>=2)
     	{
 	    	this.comboLabel.setString("X"+this.combo);
+	    	this.comboLabel.stopAllActions();
+	    	this.comboLabel.setScale(1);
+    		this.comboLabel.runAction(new cc.Sequence(new cc.EaseSineIn( new cc.ScaleTo(0.05,1.1)),new cc.EaseSineIn( new cc.ScaleTo(0.1,1))));
+
 	    	this.comboTag.stopAllActions();
 	    	this.comboTag.setOpacity(255);
 	    	this.comboTag.setPosition(540,1650);
@@ -600,8 +606,12 @@ var GameLayer = cc.Layer.extend({
     },
     getScore:function(s)
     {
-    	this.score+=Math.floor(s);
-    	if(this.level<15&&this.score>=SCORE_LEVEL[this.level])this.levelUp();
+    	var sInt = Math.floor(s)
+    	this.realScore+=sInt;
+    	this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(function(){
+    		_gameLayer.score+=sInt;
+    	})));
+    	if(this.level<15&&this.realScore>=SCORE_LEVEL[this.level])this.levelUp();
     },
 	levelUp:function()
 	{
@@ -768,6 +778,7 @@ var IceBlock = cc.Node.extend({
 		}
 		else
 		{
+			_gameLayer.getScore(4);
 			_gameLayer.beansArray[this.cx][this.cy] = 0;
 			this.removeFromParent();
 		}
@@ -783,6 +794,7 @@ var IceBlock = cc.Node.extend({
 	},
 	itemBomb:function()
 	{
+		_gameLayer.getScore(80);
 		for(var i=this.cx-1;i<=this.cx+1;i++)
 		{
 			for(var j=this.cy-1;j<=this.cy+1;j++)

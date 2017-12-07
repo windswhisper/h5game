@@ -129,7 +129,7 @@ var LoadingLayer = cc.Layer.extend({
 	},
 	startGame:function()
 	{
-		this.getParent().addChild(new GameLayer);
+		this.getParent().addChild(new GameLayer());
 		this.removeFromParent();
 	}
 });

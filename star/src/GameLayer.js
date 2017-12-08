@@ -615,9 +615,9 @@ var GameLayer = cc.Layer.extend({
     },
 	levelUp:function()
 	{
-
+		_gameLayer.level++;
+		cc.audioEngine.playEffect("res/music/level_up.mp3");
 		this.runAction(new cc.Sequence(new cc.DelayTime(3),new cc.CallFunc(function(){
-			_gameLayer.level++;
 			_gameLayer.levelLabel.setString(_gameLayer.level);
 		})));
 		var levelUpBar = new cc.Sprite("res/playpage_word_levelup.png");

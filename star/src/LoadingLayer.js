@@ -33,7 +33,7 @@ var LoadingLayer = cc.Layer.extend({
         ,"res/font/0.png","res/font/1.png","res/font/2.png","res/font/3.png","res/font/4.png","res/font/5.png","res/font/6.png","res/font/7.png","res/font/8.png","res/font/9.png","res/font/X.png"
         ,"res/playpage_bg_windows.png","res/playpage_btn_music_off.png","res/btn_resume.png","res/playpage_btn_music.png","res/btn_replay.png","res/playpage_word_stop.png"
         ,"res/playpage_progress_bg.png","res/playpage_progress.png","res/playpage_word_restar.png","res/playpage_word_comboadd.png","res/playpage_word_level.png","res/playpage_word_score.png","res/playpage_word_stop.png","res/playpage_ico_gameover.png"
-        ,"res/music/music_bgm.mp3","res/music/hit_2.mp3","res/music/hit_3.mp3","res/music/hit_4.mp3","res/music/bomb.mp3","res/music/ice_clash.mp3","res/music/drop.mp3","res/music/game_over.mp3"];
+        ,"res/music/music_bgm.mp3","res/music/hit_2.mp3","res/music/hit_3.mp3","res/music/hit_4.mp3","res/music/bomb.mp3","res/music/ice_clash.mp3","res/music/drop.mp3","res/music/level_up.mp3","res/music/game_over.mp3"];
         cc.loader.load(res,
             function (result, count, loadedCount) {
                 var percent = (loadedCount / count * 100) | 0;

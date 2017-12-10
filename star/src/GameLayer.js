@@ -6,15 +6,15 @@ var DROP_DURATION = 1;
 var SCORE_PER_BLOCK = 10;//单个方块消除分数
 var POWER_PER_BLOCK = 1;//单个方块消除能量
 var POWER_SPEED = 15;
-var SCORE_LEVEL = [0,10000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,30000];//过关需要分数
+var SCORE_LEVEL = [0,1000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,28000,32000];//过关需要分数
 var SCORE_RATE_LEVEL = [1];
 var POWER_LEVEL = [30,30,40,50,50,50,50,50];//升级所需能量
 var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
 var COMBO_RATE = [1,1,2];//连击加成比率
 var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];//多消额外加分
 var ICE_BLOCK_TIME = 3;//冰块需打破次数
-var ICE_BLOCK_RATE = [0,0,10,10,10,5,10,10,20,0,20];//冰块出现概率随等级提高
-var ITEM_BOMB_RATE = [0,0,0,0,0,2,5,4,2,0,2];//炸弹出现概率
+var ICE_BLOCK_RATE = [0,0,10,10,10,5,10,10,20,0,12,15];//冰块出现概率随等级提高
+var ITEM_BOMB_RATE = [0,0,0,0,0,2,5,4,2,0,2,2];//炸弹出现概率
 
 var STAGE_MAP = [
 	[
@@ -68,7 +68,7 @@ var STAGE_MAP = [
 	1,1,1,1,1,1,1,
 	0,1,0,0,0,1,0,
 	1,1,1,1,1,1,1,
-	1,0,0,0,0,0,1,
+	1,2,0,0,0,2,1,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0
 	],
@@ -78,7 +78,7 @@ var STAGE_MAP = [
 	0,1,2,1,2,1,0,
 	0,1,1,1,1,1,0,
 	0,0,0,0,0,0,0,
-	0,1,2,1,2,1,0,
+	0,1,3,1,3,1,0,
 	0,1,1,1,1,1,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0
@@ -92,7 +92,7 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	1,0,0,0,0,0,1,
-	1,1,0,0,0,1,1
+	3,1,0,0,0,1,3
 	],
 	[
 	0,0,0,1,0,0,0,
@@ -121,8 +121,8 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	1,2,1,1,1,2,1,
-	1,1,1,1,1,1,1,
-	1,2,1,1,1,2,1,
+	1,3,1,1,1,3,1,
+	1,2,1,3,1,2,1,
 	1,2,1,1,1,2,1,
 	1,2,2,2,2,2,1,
 	1,1,1,1,1,1,1
@@ -132,11 +132,33 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
+	1,1,0,0,0,1,1,
+	3,1,0,0,0,1,3,
+	1,1,1,0,1,1,1,
+	1,3,1,0,1,3,1,
+	1,1,1,0,1,1,1
+	],
+	[
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0
+	1,1,0,0,0,1,1,
+	3,1,0,0,0,1,3,
+	1,1,1,0,1,1,1,
+	1,3,1,0,1,3,1,
+	1,1,1,0,1,1,1
+	],
+	[
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,
+	1,1,0,0,0,1,1,
+	3,1,0,0,0,1,3,
+	1,1,1,0,1,1,1,
+	1,3,1,0,1,3,1,
+	1,1,1,0,1,1,1
 	]
 ];
 
@@ -800,6 +822,12 @@ var IceBlock = cc.Node.extend({
 
 			this.addChild(this.itemSp,-1);
 		}
+		if(this.item==-3)
+		{
+			this.itemSp = new cc.Sprite("res/playpage_chess_coin.png");
+
+			this.addChild(this.itemSp,-1);
+		}
 
 	},
 	knock:function()
@@ -831,6 +859,13 @@ var IceBlock = cc.Node.extend({
 			this.runAction(new cc.Sequence(new cc.DelayTime(1.3),new cc.CallFunc(this.itemBomb,this)));
 			this.sp.removeFromParent();
 			this.itemSp.runAction(new cc.Sequence(new cc.ScaleTo(0.4,1.05),new cc.ScaleTo(0.4,0.9),new cc.ScaleTo(0.5,1.2)));
+		}
+		else if(this.item==-3)
+		{
+			this.time = 0;
+			this.runAction(new cc.Sequence(new cc.DelayTime(0.4),new cc.CallFunc(this.itemCoin,this)));
+			this.sp.removeFromParent();
+			this.itemSp.runAction(new cc.Spawn(new cc.ScaleTo(0.4,1.1),new cc.FadeTo(0.4,0)));
 		}
 		else
 		{
@@ -875,6 +910,23 @@ var IceBlock = cc.Node.extend({
 		_gameLayer.boardNode.addChild(bomoParticle);
 
 		this.removeFromParent();
+	},
+	itemCoin:function()
+	{
+		if(!this.cancleItem)
+		{
+			_gameLayer.getScore(250);
+			cc.audioEngine.playEffect("res/music/item_coin.mp3");
+
+			_gameLayer.beansArray[this.cx][this.cy] = 0;
+			_gameLayer.fillBoard();
+			
+			var coinParticle = new ParticleFactory();
+			coinParticle.createCoinEffect(5,this.getPosition());
+			_gameLayer.boardNode.addChild(coinParticle);
+
+			this.removeFromParent();
+		}
 	},
 	explore:function()
 	{

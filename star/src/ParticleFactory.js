@@ -21,6 +21,17 @@ var ParticleFactory = cc.Node.extend({
 		}
 
 		this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.removeFromParent,this)));
+	},
+	createCoinEffect:function(num,position)
+	{
+		for(var i=0;i<num;i++)
+		{
+			var cp = new CoinParticle(i);
+			cp.setPosition(position);
+			this.addChild(cp);
+		}
+
+		this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(this.removeFromParent,this)));
 	}
 });
 
@@ -30,7 +41,6 @@ var IceParticle = cc.Node.extend({
 	ctor:function()
 	{
 		this._super();
-
 
 		this.setPosition(Math.random()*80-40,Math.random()*80-40);
 		this.setRotation(Math.random()*360);
@@ -71,5 +81,22 @@ var StarParticle = cc.Node.extend({
 		this.runAction(new cc.RotateBy(0.5,Math.random()*1000-5000));
 
 		this.sp.runAction(new cc.FadeTo(0.5,0));
+	}
+});
+
+
+var CoinParticle = cc.Node.extend({
+	ctor:function(dt)
+	{
+		this._super();
+
+		this.setPosition(Math.random()*20-10,Math.random()*20-10);
+		
+		this.sp = new cc.Sprite("res/playpage_chess_coin.png");
+
+		this.addChild(this.sp);
+
+		this.runAction(new cc.Sequence(new cc.DelayTime(dt*0.1),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.removeFromParent, this)));
+	
 	}
 });

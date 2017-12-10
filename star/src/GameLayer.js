@@ -709,7 +709,7 @@ var GameLayer = cc.Layer.extend({
 			for(var k=0;k<BOARD_SIZE.height;k++)
 			{
 				var i = (l+3)%BOARD_SIZE.width;
-				var j=(k+3)%BOARD_SIZE.height;
+				var j= (k+3)%BOARD_SIZE.height;
 				if(this.beansArray[i][j]==-2&&this.spriteArray[i][j].time<=0)return false;
 				if(this.beansArray[i][j]<0)continue;
     			this.count = 0;
@@ -735,7 +735,8 @@ var GameLayer = cc.Layer.extend({
     			if(this.countTempArray[i][j]!=0)
     			{
     				var hintTag = new cc.Sprite("res/tile_shine.png");
-    				hintTag.runAction(new cc.Sequence(new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(1,0)));
+    				hintTag.setOpacity(0);
+    				hintTag.runAction(new cc.Sequence(new cc.DelayTime(1.5),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(1,0)));
     				hintTag.setPosition(72,72);
     				this.spriteArray[i][j].addChild(hintTag);
     			}

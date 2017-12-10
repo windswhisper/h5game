@@ -9,12 +9,12 @@ var POWER_SPEED = 15;
 var SCORE_LEVEL = [0,10000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,30000];//过关需要分数
 var SCORE_RATE_LEVEL = [1];
 var POWER_LEVEL = [30,30,40,50,50,50,50,50];//升级所需能量
-var COLOR_LEVEL = [0,6,4,5];//方块颜色随等级提高
+var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
 var COMBO_RATE = [1,1,2];//连击加成比率
 var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];//多消额外加分
 var ICE_BLOCK_TIME = 3;//冰块需打破次数
 var ICE_BLOCK_RATE = [0,0,10,10,10,5,10,10,20,0,20];//冰块出现概率随等级提高
-var ITEM_BOMB_RATE = [0,40,0,0,0,2,5,4,2,0,2];//炸弹出现概率
+var ITEM_BOMB_RATE = [0,0,0,0,0,2,5,4,2,0,2];//炸弹出现概率
 
 var STAGE_MAP = [
 	[
@@ -306,7 +306,7 @@ var GameLayer = cc.Layer.extend({
 	putBlocks:function()
 	{
 		this.runAction(new cc.Sequence(new cc.DelayTime(1.2),new cc.CallFunc(function(){_gameLayer.untouch=false})));
-
+		this.boardNode.removeAllChildren();
 		for(var i=0;i<BOARD_SIZE.width;i++)
 		{
 			for(var j=0;j<BOARD_SIZE.height;j++)
@@ -850,19 +850,23 @@ var IceBlock = cc.Node.extend({
 	},
 	itemBomb:function()
 	{
-		_gameLayer.getScore(80);
-		for(var i=this.cx-1;i<=this.cx+1;i++)
+		if(!this.cancleItem)
 		{
-			for(var j=this.cy-1;j<=this.cy+1;j++)
+			_gameLayer.getScore(80);
+			for(var i=this.cx-1;i<=this.cx+1;i++)
 			{
-				if(inRange(i,j)&&_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
+				for(var j=this.cy-1;j<=this.cy+1;j++)
 				{
-					if(i==this.cx&&j==this.cy)continue;
-					_gameLayer.spriteArray[i][j].hit();
+					if(inRange(i,j)&&_gameLayer.beansArray[i][j]!=null&&_gameLayer.beansArray[i][j]!=0)
+					{
+						if(i==this.cx&&j==this.cy)continue;
+						_gameLayer.spriteArray[i][j].hit();
+					}
 				}
 			}
+			_gameLayer.beansArray[this.cx][this.cy] = 0;
+			_gameLayer.fillBoard();
 		}
-
 		cc.audioEngine.playEffect("res/music/bomb.mp3");
 
 		var bomoParticle = new ParticleFactory();
@@ -870,10 +874,7 @@ var IceBlock = cc.Node.extend({
 		bomoParticle.setPosition(this.getPosition());
 		_gameLayer.boardNode.addChild(bomoParticle);
 
-		_gameLayer.beansArray[this.cx][this.cy] = 0;
 		this.removeFromParent();
-		if(!this.cancleItem)
-			_gameLayer.fillBoard();
 	},
 	explore:function()
 	{

@@ -6,15 +6,15 @@ var DROP_DURATION = 1;
 var SCORE_PER_BLOCK = 10;//单个方块消除分数
 var POWER_PER_BLOCK = 1;//单个方块消除能量
 var POWER_SPEED = 15;
-var SCORE_LEVEL = [0,1000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,30000];//过关需要分数
+var SCORE_LEVEL = [0,10000,2500,4000,6000,8000,10000,12000,15000,18000,20000,24000,30000];//过关需要分数
 var SCORE_RATE_LEVEL = [1];
 var POWER_LEVEL = [30,30,40,50,50,50,50,50];//升级所需能量
-var COLOR_LEVEL = [0,4,4,5];//方块颜色随等级提高
+var COLOR_LEVEL = [0,6,4,5];//方块颜色随等级提高
 var COMBO_RATE = [1,1,2];//连击加成比率
 var SCORE_EXTRA = [0,0,0,0,10,10,10,20,20,20,50];//多消额外加分
 var ICE_BLOCK_TIME = 3;//冰块需打破次数
 var ICE_BLOCK_RATE = [0,0,10,10,10,5,10,10,20,0,20];//冰块出现概率随等级提高
-var ITEM_BOMB_RATE = [0,0,0,0,0,2,5,4,2,0,2];//炸弹出现概率
+var ITEM_BOMB_RATE = [0,40,0,0,0,2,5,4,2,0,2];//炸弹出现概率
 
 var STAGE_MAP = [
 	[
@@ -284,6 +284,7 @@ var GameLayer = cc.Layer.extend({
 		this.clearCombo();
 		this.putBlocks();
 		this.updatePowerBar();
+		this.showHint();
 	},
 
 	clearBoard:function()
@@ -298,6 +299,8 @@ var GameLayer = cc.Layer.extend({
 					new cc.CallFunc(this.spriteArray[i][j].removeFromParent,this.spriteArray[i][j])));
 			}
 		}
+
+		this.boardNode.runAction(new cc.Sequence(new cc.DelayTime(1.3),new cc.CallFunc(this.boardNode.removeAllChildren,this.boardNode)));
 	},
 
 	putBlocks:function()
@@ -554,6 +557,7 @@ var GameLayer = cc.Layer.extend({
 		for(var i=0;i<BOARD_SIZE.width;i++)
 			for(var j=0;j<BOARD_SIZE.height;j++)
 			{
+				if(this.beansArray[i][j]==-2&&this.spriteArray[i][j].time<=0)return false;
 				if(this.beansArray[i][j]<0)continue;
     			this.count = 0;
 				this.countNear(i,j);
@@ -634,6 +638,16 @@ var GameLayer = cc.Layer.extend({
 
 		this.runAction(new cc.Sequence(new cc.DelayTime(1.75),new cc.CallFunc(this.clearBoard,this)));
 		this.runAction(new cc.Sequence(new cc.DelayTime(3.5),new cc.CallFunc(this.putBlocks,this)));
+
+
+		for(var i=0;i<BOARD_SIZE.width;i++)
+			for(var j=0;j<BOARD_SIZE.height;j++)
+			{
+				if(this.beansArray[i][j]==-2)
+				{
+					this.spriteArray[i][j].cancleItem = true;
+				}
+			}
 	},
     updateScore:function()
     {
@@ -664,7 +678,46 @@ var GameLayer = cc.Layer.extend({
     {
     	this.addChild(new OverLayer(this));
     	this.hideBars();
-    
+    },
+    showHint:function()
+    {
+
+		for(var l=0;l<BOARD_SIZE.width;l++)
+		{
+			for(var k=0;k<BOARD_SIZE.height;k++)
+			{
+				var i = (l+3)%BOARD_SIZE.width;
+				var j=(k+3)%BOARD_SIZE.height;
+				if(this.beansArray[i][j]==-2&&this.spriteArray[i][j].time<=0)return false;
+				if(this.beansArray[i][j]<0)continue;
+    			this.count = 0;
+				for(var m=0;m<BOARD_SIZE.width;m++)
+					for(var n=0;n<BOARD_SIZE.height;n++)
+		    			this.countTempArray[m][n] = 0;
+				this.countNear(i,j);
+				if(this.count>1)
+				{
+					break;
+				}
+			}
+			if(this.count>1)
+			{
+				break;
+			}
+			
+		}
+
+		for(var i=0;i<BOARD_SIZE.width;i++)
+			for(var j=0;j<BOARD_SIZE.height;j++)
+			{
+    			if(this.countTempArray[i][j]!=0)
+    			{
+    				var hintTag = new cc.Sprite("res/tile_shine.png");
+    				hintTag.runAction(new cc.Sequence(new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,72),new cc.FadeTo(0.5,255),new cc.FadeTo(1,0)));
+    				hintTag.setPosition(72,72);
+    				this.spriteArray[i][j].addChild(hintTag);
+    			}
+			}
     }
 });
 
@@ -694,6 +747,7 @@ var Bean = cc.Sprite.extend({
         this.setZOrder(2);
 
         this.stopAllActions();
+        this.removeAllChildren();
 
         this.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.3),new cc.ScaleTo(0.1,1),new cc.DelayTime(0.4),new cc.ScaleTo(0.6,0.5)));
 
@@ -726,6 +780,7 @@ var Bean = cc.Sprite.extend({
 var IceBlock = cc.Node.extend({
 	time:0,
 	item:null,
+	cancleItem:false,
 	ctor:function(item)
 	{
 		this._super();
@@ -772,6 +827,7 @@ var IceBlock = cc.Node.extend({
 	{
 		if(this.item==-2)
 		{
+			this.time = 0;
 			this.runAction(new cc.Sequence(new cc.DelayTime(1.3),new cc.CallFunc(this.itemBomb,this)));
 			this.sp.removeFromParent();
 			this.itemSp.runAction(new cc.Sequence(new cc.ScaleTo(0.4,1.05),new cc.ScaleTo(0.4,0.9),new cc.ScaleTo(0.5,1.2)));
@@ -815,8 +871,9 @@ var IceBlock = cc.Node.extend({
 		_gameLayer.boardNode.addChild(bomoParticle);
 
 		_gameLayer.beansArray[this.cx][this.cy] = 0;
-		_gameLayer.fillBoard();
 		this.removeFromParent();
+		if(!this.cancleItem)
+			_gameLayer.fillBoard();
 	},
 	explore:function()
 	{

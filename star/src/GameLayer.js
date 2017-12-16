@@ -525,8 +525,6 @@ var GameLayer = cc.Layer.extend({
 			    		cc.audioEngine.playEffect("res/music/hit_2.mp3");
 			    		break;
 		    	}
-		    this.power+=this.count*POWER_PER_BLOCK;
-		    if(this.power>1)this.power=1;
 
 		    var s = (SCORE_PER_BLOCK*this.count*arv(COMBO_RATE,this.combo) + arv(SCORE_EXTRA,this.count))*arv(SCORE_RATE_LEVEL,this.level);
 		    this.getScore(s);

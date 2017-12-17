@@ -748,7 +748,7 @@ var GameLayer = cc.Layer.extend({
     	this.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.CallFunc(function(){
     		_gameLayer.score+=sInt;
     	})));
-    	if(this.level<15&&this.realScore>=SCORE_LEVEL[this.level])this.levelUp();
+    	if(this.realScore>=SCORE_LEVEL[this.level])this.levelUp();
     },
 	levelUp:function()
 	{
@@ -772,13 +772,14 @@ var GameLayer = cc.Layer.extend({
 
 		if(this.level>20)
 		{
+			this.level=20;
 			this.runAction(new cc.Sequence(new cc.DelayTime(4),new cc.CallFunc(this.showOverLayer,this)));
 		}
 		else
 		{
-			this.runAction(new cc.Sequence(new cc.DelayTime(1.75),new cc.CallFunc(this.clearBoard,this)));
 			this.runAction(new cc.Sequence(new cc.DelayTime(3.5),new cc.CallFunc(this.putBlocks,this)));
 		}
+		this.runAction(new cc.Sequence(new cc.DelayTime(1.75),new cc.CallFunc(this.clearBoard,this)));
 
 		for(var i=0;i<BOARD_SIZE.width;i++)
 			for(var j=0;j<BOARD_SIZE.height;j++)

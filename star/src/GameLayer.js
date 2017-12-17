@@ -10,7 +10,7 @@ var ICE_BLOCK_TIME = 	3;//冰块需打破次数
 
 //关卡序号						1 		2 		3 		4 		5 		6 		7 		8 		9 		10 		11 		12 		13 		14 		15 		16 		17 		18 	 	19		20
 
-var SCORE_LEVEL = 		[0,		1000,	2500,	4000,	6000,	90000,	11500,	14000,	16500,	20000,	25000,	32000,	38000,	42000,	50000,	53000,	58000,	64000,	800000,	100000,	1000000];//过关需要分数
+var SCORE_LEVEL = 		[0,		1000,	2500,	4000,	6000,	90000,	11500,	14000,	16500,	20000,	25000,	32000,	38000,	42000,	50000,	53000,	58000,	64000,	800000,	100000,	200000];//过关需要分数
 var ICE_BLOCK_RATE = 	[0,		0,		10,		10,		10,		5,		8,		8,		20,		0,		5,		12,		5,		11,		0,		0,		5,		0,		0,		0,		0];//冰块出现概率随等级提高
 var ITEM_BOMB_RATE = 	[0,		0,		0,		0,		0,		2,		5,		5,		2,		0,		4,		2,		10,		5,		30,		3,		5,		2,		15,		0,		5];//炸弹出现概率
 var ITEM_COIN_RATE = 	[0,		0,		0,		0,		0,		1,		1,		1,		0,		0,		2,		2,		2,		2,		0,		0,		0,		20,		5,		0,		25];//金币出现概率
@@ -752,6 +752,7 @@ var GameLayer = cc.Layer.extend({
     },
 	levelUp:function()
 	{
+
 		_gameLayer.level++;
 		cc.audioEngine.playEffect("res/music/level_up.mp3");
 		this.runAction(new cc.Sequence(new cc.DelayTime(3),new cc.CallFunc(function(){
@@ -769,9 +770,15 @@ var GameLayer = cc.Layer.extend({
 
 		this.untouch = true;
 
-		this.runAction(new cc.Sequence(new cc.DelayTime(1.75),new cc.CallFunc(this.clearBoard,this)));
-		this.runAction(new cc.Sequence(new cc.DelayTime(3.5),new cc.CallFunc(this.putBlocks,this)));
-
+		if(this.level>20)
+		{
+			this.runAction(new cc.Sequence(new cc.DelayTime(4),new cc.CallFunc(this.showOverLayer,this)));
+		}
+		else
+		{
+			this.runAction(new cc.Sequence(new cc.DelayTime(1.75),new cc.CallFunc(this.clearBoard,this)));
+			this.runAction(new cc.Sequence(new cc.DelayTime(3.5),new cc.CallFunc(this.putBlocks,this)));
+		}
 
 		for(var i=0;i<BOARD_SIZE.width;i++)
 			for(var j=0;j<BOARD_SIZE.height;j++)

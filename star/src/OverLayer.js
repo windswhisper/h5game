@@ -102,7 +102,7 @@ var OverLayer = cc.Layer.extend({
         if(cc.pDistanceSQ(target.btnContinue.getPosition(),p)<10000)
         {
             cc.audioEngine.playEffect("res/music/drop.mp3");
-            target.preRestart();
+            target.restart();
         }
     },
     preRestart:function()

@@ -436,6 +436,7 @@ var GameLayer = cc.Layer.extend({
 
 	putBlocks:function()
 	{
+		this.clearCombo();
 		this.runAction(new cc.Sequence(new cc.DelayTime(1.2),new cc.CallFunc(function(){_gameLayer.untouch=false})));
 		this.boardNode.removeAllChildren();
 		for(var i=0;i<BOARD_SIZE.width;i++)

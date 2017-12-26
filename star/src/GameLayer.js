@@ -896,26 +896,7 @@ var Bean = cc.Sprite.extend({
 
         this.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.3),new cc.ScaleTo(0.1,1),new cc.DelayTime(0.4),new cc.ScaleTo(0.6,0.5)));
 
-        var bean = this;
-
-        this.runAction(new cc.Sequence(new cc.DelayTime(0.05),new cc.CallFunc(
-        	function(){
-        		bean.setTexture("res/ani/cs/1.png");
-        	}),new cc.DelayTime(0.08),new cc.CallFunc(
-        	function(){
-        		bean.setTexture("res/ani/cs/2.png");
-        	}),new cc.DelayTime(0.07),new cc.CallFunc(
-        	function(){
-        		bean.setTexture("res/ani/cs/3.png");
-        	}),new cc.DelayTime(0.07),new cc.CallFunc(
-        	function(){
-        		bean.setTexture("res/ani/cs/4.png");
-        	}),new cc.DelayTime(0.05),new cc.CallFunc(
-        	function(){
-        		bean.setTexture("res/ani/cs/5.png");
-        	}),cc.DelayTime(0.05),new cc.CallFunc(this.clashStar, this)));
-
-        //this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.clashStar, this)));
+        this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.clashStar, this)));
 	},
 	clashStar:function()
 	{

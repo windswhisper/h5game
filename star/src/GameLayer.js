@@ -11,9 +11,9 @@ var ICE_BLOCK_TIME = 	3;//冰块需打破次数
 //关卡序号						1 		2 		3 		4 		5 		6 		7 		8 		9 		10 		11 		12 		13 		14 		15 		16 		17 		18 	 	19		20
 
 var SCORE_LEVEL = 		[0,		1000,	2500,	4000,	6000,	9000,	11500,	14000,	16500,	20000,	25000,	32000,	38000,	46000,	50000,	53000,	58000,	64000,	90000,	100000,	125000];//过关需要分数
-var ICE_BLOCK_RATE = 	[0,		0,		10,		10,		10,		5,		8,		5,		20,		0,		5,		12,		5,		0,		11,		0,		7,		0,		0,		0,		0];//冰块出现概率随等级提高
-var ITEM_BOMB_RATE = 	[0,		0,		0,		0,		0,		2,		5,		4,		2,		0,		4,		2,		10,		30,		2,		3,		2,		2,		10,		0,		5];//炸弹出现概率
-var ITEM_COIN_RATE = 	[0,		0,		0,		0,		0,		1,		1,		1,		0,		0,		2,		2,		2,		0,		2,		0,		2,		20,		10,		0,		25];//金币出现概率
+var ICE_BLOCK_RATE = 	[0,		0,		10,		10,		10,		5,		8,		5,		20,		0,		5,		12,		5,		0,		11,		0,		7,		0,		0,		2,		0];//冰块出现概率随等级提高
+var ITEM_BOMB_RATE = 	[0,		0,		0,		0,		0,		2,		5,		4,		2,		0,		4,		2,		10,		30,		2,		3,		2,		2,		10,		2,		5];//炸弹出现概率
+var ITEM_COIN_RATE = 	[0,		0,		0,		0,		0,		1,		1,		1,		0,		0,		2,		2,		2,		0,		2,		0,		2,		24,		10,		2,		25];//金币出现概率
 var COLOR_LEVEL = 		[0,		4,		4,		5,		5,		5,		5,		5,		5,		4,		5,		5,		5,		5,		5,		6,		6,		5,		6,		6,		4];//方块颜色随等级提高
 var SCORE_RATE_LEVEL = 	[1];
 
@@ -59,7 +59,7 @@ var STAGE_MAP = [
 	0,0,0,0,0,0,0,
 	0,0,0,2,0,0,0,
 	0,0,1,1,1,0,0,
-	0,0,1,1,1,0,0,
+	0,0,1,2,1,0,0,
 	0,0,1,1,1,0,0,
 	0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,
@@ -896,7 +896,26 @@ var Bean = cc.Sprite.extend({
 
         this.runAction(new cc.Sequence(new cc.ScaleTo(0.1,1.3),new cc.ScaleTo(0.1,1),new cc.DelayTime(0.4),new cc.ScaleTo(0.6,0.5)));
 
-        this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.clashStar, this)));
+        var bean = this;
+
+        this.runAction(new cc.Sequence(new cc.DelayTime(0.05),new cc.CallFunc(
+        	function(){
+        		bean.setTexture("res/ani/cs/1.png");
+        	}),new cc.DelayTime(0.08),new cc.CallFunc(
+        	function(){
+        		bean.setTexture("res/ani/cs/2.png");
+        	}),new cc.DelayTime(0.07),new cc.CallFunc(
+        	function(){
+        		bean.setTexture("res/ani/cs/3.png");
+        	}),new cc.DelayTime(0.07),new cc.CallFunc(
+        	function(){
+        		bean.setTexture("res/ani/cs/4.png");
+        	}),new cc.DelayTime(0.05),new cc.CallFunc(
+        	function(){
+        		bean.setTexture("res/ani/cs/5.png");
+        	}),cc.DelayTime(0.05),new cc.CallFunc(this.clashStar, this)));
+
+        //this.runAction(new cc.Sequence(new cc.DelayTime(Math.random()*0.1),new cc.DelayTime(0.2),new cc.EaseBackIn(new cc.MoveTo(0.7,cc.p(540-106,1870-380))),new cc.CallFunc(this.clashStar, this)));
 	},
 	clashStar:function()
 	{

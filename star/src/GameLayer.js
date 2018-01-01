@@ -889,8 +889,6 @@ var Bean = cc.Sprite.extend({
 		this.vx = Math.random()*20-10;
 		this.vy = Math.random()*10+10;
 
-        this.setZOrder(2);
-
         this.stopAllActions();
         this.removeAllChildren();
 

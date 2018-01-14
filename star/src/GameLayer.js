@@ -391,7 +391,7 @@ var GameLayer = cc.Layer.extend({
 			this.scoreDisplay+=Math.ceil((this.score-this.scoreDisplay)/30);
     		this.scoreLabel.setString(this.scoreDisplay);
     	}
-    		this.updatePowerBar();
+    	this.updatePowerBar();
 	},
 	showBars:function()
 	{
@@ -755,7 +755,6 @@ var GameLayer = cc.Layer.extend({
     },
 	levelUp:function()
 	{
-
 		_gameLayer.level++;
 		cc.audioEngine.playEffect("res/music/level_up.mp3");
 		this.runAction(new cc.Sequence(new cc.DelayTime(3),new cc.CallFunc(function(){

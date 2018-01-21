@@ -298,6 +298,7 @@ var GameLayer = cc.Layer.extend({
 	combo:0,
 	comboTime:0,
 	level:1,
+	levelDisplay:1,
 	power:0,
 
 	ctor:function()
@@ -436,6 +437,7 @@ var GameLayer = cc.Layer.extend({
 
 	putBlocks:function()
 	{
+		this.levelDisplay = this.level;
 		this.clearCombo();
 		this.runAction(new cc.Sequence(new cc.DelayTime(1.2),new cc.CallFunc(function(){_gameLayer.untouch=false})));
 		this.boardNode.removeAllChildren();
@@ -735,7 +737,7 @@ var GameLayer = cc.Layer.extend({
     },
     updatePowerBar:function(power)
     {
-    	var progress = (this.score-SCORE_LEVEL[this.level-1])/(SCORE_LEVEL[this.level]-SCORE_LEVEL[this.level-1]);
+    	var progress = (this.score-SCORE_LEVEL[this.levelDisplay-1])/(SCORE_LEVEL[this.levelDisplay]-SCORE_LEVEL[this.levelDisplay-1]);
 
     	this.powerDisplay+=(progress-this.powerDisplay)/50;
     	if(this.powerDisplay>1)this.powerDisplay=1;

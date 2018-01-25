@@ -29,7 +29,7 @@ var LoadingLayer = cc.Layer.extend({
         var res = ["res/playpage_chess_1.png","res/playpage_chess_2.png","res/playpage_chess_3.png","res/playpage_chess_4.png","res/playpage_chess_5.png","res/playpage_chess_6.png"
         ,"res/Candy_1.png","res/Candy_2.png","res/Candy_3.png","res/Candy_4.png","res/Candy_5.png","res/Candy_6.png"
         ,"res/playpage_ico_ice_1.png","res/playpage_ico_ice_2.png","res/playpage_ico_ice_3.png","res/playpage_chess_bomb.png","res/playpage_chess_coin.png"
-        ,"res/btn_play.png","res/logo.png","res/main_city.jpg","res/main_cloud1.jpg","res/main_cloud2.jpg","res/main_cloud3.jpg","res/main_cloud4.jpg","res/main_moon.jpg","res/playpage_chessbg.png","res/playpage_Top.png","res/tile_shine.png","res/playpage_bg.png","res/btn_pause.png"
+        ,"res/btn_play.png","res/logo.png","res/main_city.png","res/main_cloud1.png","res/main_cloud2.png","res/main_cloud3.png","res/main_cloud4.png","res/main_moon.png","res/playpage_chessbg.png","res/playpage_Top.png","res/tile_shine.png","res/playpage_bg.png","res/btn_pause.png"
         ,"res/font/0.png","res/font/1.png","res/font/2.png","res/font/3.png","res/font/4.png","res/font/5.png","res/font/6.png","res/font/7.png","res/font/8.png","res/font/9.png","res/font/X.png"
         ,"res/playpage_bg_windows.png","res/playpage_btn_music_off.png","res/btn_resume.png","res/playpage_btn_music.png","res/btn_replay.png","res/playpage_word_stop.png"
         ,"res/playpage_progress_bg.png","res/playpage_progress.png","res/playpage_word_restar.png","res/playpage_word_comboadd.png","res/playpage_word_level.png","res/playpage_word_score.png","res/playpage_word_stop.png","res/playpage_ico_gameover.png"
@@ -83,13 +83,13 @@ var LoadingLayer = cc.Layer.extend({
 
 		var cloud2 = new cc.Sprite("res/main_cloud2.png");
 
-		cloud2.setPosition(900,1700);
+		cloud2.setPosition(1500,1700);
 
 		cloud2.setOpacity(0);
 
-		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(16),new cc.FadeTo(1,255),new cc.DelayTime(8),new cc.FadeTo(3,0),new cc.DelayTime(6))));
+		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(18),new cc.FadeTo(2,255),new cc.DelayTime(15),new cc.FadeTo(3,0),new cc.DelayTime(4))));
 
-		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(16),new cc.MoveBy(12,cc.p(-1200,0)),new cc.MoveBy(0,cc.p(1200,0),new cc.DelayTime(6)))));
+		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(16),new cc.MoveBy(20,cc.p(-1800,0)),new cc.MoveBy(0,cc.p(1800,0),new cc.DelayTime(6)))));
 
 		this.addChild(cloud2);
 
@@ -119,13 +119,13 @@ var LoadingLayer = cc.Layer.extend({
 
 		var cloud4 = new cc.Sprite("res/main_cloud4.png");
 
-		cloud4.setPosition(1200,1200);
+		cloud4.setPosition(1600,1200);
 
 		cloud4.setOpacity(0);
 
-		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(2),new cc.FadeTo(1,255),new cc.DelayTime(4),new cc.FadeTo(2,0),new cc.DelayTime(20))));
+		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(2),new cc.FadeTo(1,255),new cc.DelayTime(10),new cc.FadeTo(3,0),new cc.DelayTime(20))));
 
-		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(2),new cc.MoveBy(7,cc.p(-1100,0)),new cc.MoveBy(0,cc.p(1100,0),new cc.DelayTime(20)))));
+		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(2),new cc.MoveBy(14,cc.p(-2000,0)),new cc.MoveBy(0,cc.p(2000,0),new cc.DelayTime(20)))));
 
 		this.addChild(cloud4);
 

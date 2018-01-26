@@ -89,9 +89,9 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud2.setScale(0.6);
 
-		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.FadeTo(2,172),new cc.DelayTime(20),new cc.FadeTo(28,0),new cc.DelayTime(4))));
+		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.FadeTo(2,172),new cc.DelayTime(70),new cc.FadeTo(28,0),new cc.DelayTime(4))));
 
-		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(50,cc.p(-1800,0)),new cc.MoveBy(0,cc.p(1800,0),new cc.DelayTime(6)))));
+		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(100,cc.p(-1800,0)),new cc.MoveBy(0,cc.p(1800,0),new cc.DelayTime(6)))));
 
 		this.addChild(cloud2);
 
@@ -115,9 +115,9 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud3.setScale(0.6);
 
-		cloud3.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.FadeTo(1,172),new cc.DelayTime(35),new cc.FadeTo(4,0))));
+		cloud3.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.FadeTo(1,172),new cc.DelayTime(35),new cc.FadeTo(14,0))));
 
-		cloud3.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(40,cc.p(-1100,0)),new cc.MoveBy(0,cc.p(1100,0)))));
+		cloud3.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(50,cc.p(-1100,0)),new cc.MoveBy(0,cc.p(1100,0)))));
 
 		this.addChild(cloud3);
 
@@ -129,9 +129,9 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud4.setScale(0.6);
 
-		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.FadeTo(1,172),new cc.DelayTime(16),new cc.FadeTo(27,0),new cc.DelayTime(20))));
+		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.FadeTo(1,172),new cc.DelayTime(46),new cc.FadeTo(27,0),new cc.DelayTime(20))));
 
-		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(44,cc.p(-2000,0)),new cc.MoveBy(0,cc.p(2000,0),new cc.DelayTime(20)))));
+		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(74,cc.p(-2000,0)),new cc.MoveBy(0,cc.p(2000,0),new cc.DelayTime(20)))));
 
 		this.addChild(cloud4);
 

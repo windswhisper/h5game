@@ -16,6 +16,8 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.logoLoading.setPosition(540,1260);
 
+		this.logoLoading.setScale(0.5);
+
 		this.addChild(this.logoLoading);
 
 		this.progressBg = new cc.Sprite("res/loading_bottom.png");

@@ -19,11 +19,11 @@ var LoadingLayer = cc.Layer.extend({
 		this.addChild(this.logoLoading);
 
 		this.progressBg = new cc.Sprite("res/loading_bottom.png");
-		this.progressBg.setPosition(540,320);
+		this.progressBg.setPosition(540,200);
 		this.addChild(this.progressBg); 
 
 		this.progressBar = new cc.Sprite("res/loading_top.png");
-		this.progressBar.setPosition(540,320);
+		this.progressBar.setPosition(540,200);
 		this.addChild(this.progressBar); 
 
         var res = ["res/playpage_chess_1.png","res/playpage_chess_2.png","res/playpage_chess_3.png","res/playpage_chess_4.png","res/playpage_chess_5.png","res/playpage_chess_6.png"
@@ -45,7 +45,7 @@ var LoadingLayer = cc.Layer.extend({
 	},
     updateProgressBar:function(power)
     {
-		this.progressBar.setPosition(540-640/2*(1-power),140);
+		this.progressBar.setPosition(540-640/2*(1-power),200);
 		this.progressBar.setTextureRect(cc.rect(0,0,640*(power),29));
     },
 	onLoaded:function()

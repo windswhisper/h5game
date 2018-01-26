@@ -111,9 +111,9 @@ var StarParticle2 = cc.Node.extend({
 		var g = Math.random()*60+195;
 		var b = Math.random()*60+195;
 
-		if(Math.random()<0.20)r = Math.random()*20+25;
-		else if(Math.random()<0.5)g = Math.random()*20+25;
-		else b = Math.random()*20+25;
+		if(Math.random()<0.2)r = Math.random()*20+45;
+		else if(Math.random()<0.4)g = Math.random()*20+45;
+		else b = Math.random()*20+45;
 
 		this.sp.setColor(cc.color(r,g,b));
 

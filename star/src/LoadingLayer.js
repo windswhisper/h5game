@@ -14,18 +14,16 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.logoLoading = new cc.Sprite("res/logo_loading.png");
 
-		this.logoLoading.setPosition(540,1260);
-
-		this.logoLoading.setScale(0.75);
+		this.logoLoading.setPosition(540,1160);
 
 		this.addChild(this.logoLoading);
 
 		this.progressBg = new cc.Sprite("res/loading_bottom.png");
-		this.progressBg.setPosition(540,140);
+		this.progressBg.setPosition(540,320);
 		this.addChild(this.progressBg); 
 
 		this.progressBar = new cc.Sprite("res/loading_top.png");
-		this.progressBar.setPosition(540,140);
+		this.progressBar.setPosition(540,320);
 		this.addChild(this.progressBar); 
 
         var res = ["res/playpage_chess_1.png","res/playpage_chess_2.png","res/playpage_chess_3.png","res/playpage_chess_4.png","res/playpage_chess_5.png","res/playpage_chess_6.png"

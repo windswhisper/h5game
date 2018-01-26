@@ -107,7 +107,7 @@ var StarParticle2 = cc.Node.extend({
 
 		this.sp = new cc.Sprite("res/ani/star_1.png");
 
-		this.sp.setColor(cc.color(Math.random()*155+100,Math.random()*155+100,Math.random()*155+100));
+		this.sp.setColor(cc.color(Math.random()*100+155,Math.random()*100+155,Math.random()*100+155));
 
 		this.addChild(this.sp);
 

@@ -5,7 +5,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		this._super();
 
-		this.shadow = new cc.LayerColor(cc.color(4,166,103,255));
+		this.shadow = new cc.LayerColor(cc.color(255,255,255,255));
 
 		this.shadow.setScale(50);
 
@@ -14,7 +14,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.logoLoading = new cc.Sprite("res/logo_loading.png");
 
-		this.logoLoading.setPosition(540,1060);
+		this.logoLoading.setPosition(540,1260);
 
 		this.addChild(this.logoLoading);
 
@@ -87,7 +87,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud2.setOpacity(0);
 
-		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(18),new cc.FadeTo(2,255),new cc.DelayTime(15),new cc.FadeTo(3,0),new cc.DelayTime(4))));
+		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(18),new cc.FadeTo(2,255),new cc.DelayTime(12),new cc.FadeTo(6,0),new cc.DelayTime(4))));
 
 		cloud2.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(16),new cc.MoveBy(20,cc.p(-1800,0)),new cc.MoveBy(0,cc.p(1800,0),new cc.DelayTime(6)))));
 
@@ -111,7 +111,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud3.setOpacity(0);
 
-		cloud3.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(7),new cc.FadeTo(1,255),new cc.DelayTime(6),new cc.FadeTo(3,0))));
+		cloud3.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(7),new cc.FadeTo(1,255),new cc.DelayTime(5),new cc.FadeTo(4,0))));
 
 		cloud3.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(7),new cc.MoveBy(10,cc.p(-1100,0)),new cc.MoveBy(0,cc.p(1100,0)))));
 
@@ -123,7 +123,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud4.setOpacity(0);
 
-		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(2),new cc.FadeTo(1,255),new cc.DelayTime(10),new cc.FadeTo(3,0),new cc.DelayTime(20))));
+		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(2),new cc.FadeTo(1,255),new cc.DelayTime(6),new cc.FadeTo(7,0),new cc.DelayTime(20))));
 
 		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(2),new cc.MoveBy(14,cc.p(-2000,0)),new cc.MoveBy(0,cc.p(2000,0),new cc.DelayTime(20)))));
 
@@ -147,7 +147,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud1.setOpacity(0);
 
-		cloud1.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(13),new cc.FadeTo(1,255),new cc.DelayTime(5),new cc.FadeTo(3,0))));
+		cloud1.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(13),new cc.FadeTo(1,255),new cc.DelayTime(4),new cc.FadeTo(4,0))));
 
 		cloud1.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(13),new cc.MoveBy(9,cc.p(-900,0)),new cc.MoveBy(0,cc.p(900,0)))));
 

@@ -762,15 +762,30 @@ var GameLayer = cc.Layer.extend({
 		this.runAction(new cc.Sequence(new cc.DelayTime(3),new cc.CallFunc(function(){
 			_gameLayer.levelLabel.setString(_gameLayer.level);
 		})));
+
+
+		var starParticle = new ParticleFactory();
+		starParticle.createLevelUpEffect(40,cc.p(0.8,1.1));
+		starParticle.setPosition(-100,380);
+		this.addChild(starParticle);
+
+		starParticle = new ParticleFactory();
+		starParticle.createLevelUpEffect(40,cc.p(-0.8,1.1));
+		starParticle.setPosition(1180,380);
+		this.addChild(starParticle);
+
+
 		var levelUpBar = new cc.Sprite("res/playpage_word_levelup.png");
-		levelUpBar.setPosition(540,880);
+		levelUpBar.setPosition(540,1080);
 		levelUpBar.setOpacity(0);
-		levelUpBar.runAction(new cc.Sequence(new cc.FadeTo(0.4,255),new cc.MoveBy(0.4,cc.p(0,200)),new cc.DelayTime(0.5),new cc.FadeTo(0.4,255),new cc.MoveBy(0.4,cc.p(0,200)),new cc.CallFunc(
+		levelUpBar.setScale(0);
+		levelUpBar.runAction(new cc.Sequence(new cc.Spawn(new cc.EaseBackOut(new cc.ScaleTo(0.5,1.5)),new cc.FadeTo(0.2,255)),new cc.DelayTime(0.5),new cc.FadeTo(0.4,255),new cc.MoveBy(0.4,cc.p(0,200)),new cc.CallFunc(
 				function(){
 					this.removeFromParent();
 				},levelUpBar)
 		));
 		this.addChild(levelUpBar);
+
 
 		this.untouch = true;
 
@@ -950,7 +965,6 @@ var IceBlock = cc.Node.extend({
 
 			this.addChild(this.itemSp,-1);
 		}
-
 	},
 	knock:function()
 	{
@@ -1022,6 +1036,7 @@ var IceBlock = cc.Node.extend({
 				}
 			}
 			_gameLayer.beansArray[this.cx][this.cy] = 0;
+			_gameLayer.getCombo();
 			_gameLayer.fillBoard();
 		}
 		cc.audioEngine.playEffect("res/music/bomb.mp3");

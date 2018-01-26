@@ -27,7 +27,7 @@ var LoadingLayer = cc.Layer.extend({
 		this.addChild(this.progressBar); 
 
         var res = ["res/playpage_chess_1.png","res/playpage_chess_2.png","res/playpage_chess_3.png","res/playpage_chess_4.png","res/playpage_chess_5.png","res/playpage_chess_6.png"
-        ,"res/Candy_1.png","res/Candy_2.png","res/Candy_3.png","res/Candy_4.png","res/Candy_5.png","res/Candy_6.png"
+        ,"res/Candy_1.png","res/Candy_2.png","res/Candy_3.png","res/Candy_4.png","res/Candy_5.png","res/Candy_6.png","res/ani/star_1.png"
         ,"res/playpage_ico_ice_1.png","res/playpage_ico_ice_2.png","res/playpage_ico_ice_3.png","res/playpage_chess_bomb.png","res/playpage_chess_coin.png"
         ,"res/btn_play.png","res/logo.png","res/main_city.png","res/main_cloud1.png","res/main_cloud2.png","res/main_cloud3.png","res/main_cloud4.png","res/main_moon.png","res/playpage_chessbg.png","res/playpage_Top.png","res/tile_shine.png","res/playpage_bg.png","res/btn_pause.png"
         ,"res/font/0.png","res/font/1.png","res/font/2.png","res/font/3.png","res/font/4.png","res/font/5.png","res/font/6.png","res/font/7.png","res/font/8.png","res/font/9.png","res/font/X.png"

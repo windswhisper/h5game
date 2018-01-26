@@ -16,7 +16,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		this.logoLoading.setPosition(540,1260);
 
-		this.logoLoading.setScale(0.5);
+		this.logoLoading.setScale(0.75);
 
 		this.addChild(this.logoLoading);
 

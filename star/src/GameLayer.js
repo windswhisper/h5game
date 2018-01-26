@@ -416,7 +416,6 @@ var GameLayer = cc.Layer.extend({
 		this.clearCombo();
 		this.putBlocks();
 		this.updatePowerBar();
-		this.showHint();
 	},
 
 	clearBoard:function()
@@ -438,6 +437,7 @@ var GameLayer = cc.Layer.extend({
 	putBlocks:function()
 	{
 		this.levelDisplay = this.level;
+
 		this.clearCombo();
 		this.runAction(new cc.Sequence(new cc.DelayTime(1.2),new cc.CallFunc(function(){_gameLayer.untouch=false})));
 		this.boardNode.removeAllChildren();
@@ -456,6 +456,22 @@ var GameLayer = cc.Layer.extend({
 					this.putBall(i,j,rand);
 				}
 			}
+		}
+
+
+		if(this.level == 1)
+		{
+			this.showTips(1);
+			this.showHint();
+		}
+		if(this.level == 2)
+		{
+			this.showTips(3);
+			this.showHint();
+		}
+		if(this.level == 3)
+		{
+			this.showTips(5);
 		}
 
 	},
@@ -713,6 +729,10 @@ var GameLayer = cc.Layer.extend({
     },
     getCombo:function()
     {
+    	if(this.showingTipsId == 1)
+    	{
+    		this.showTips(2);
+    	}
     	this.comboTime = 0;
     	this.combo++;
     	if(this.combo>=2)
@@ -757,6 +777,10 @@ var GameLayer = cc.Layer.extend({
     },
 	levelUp:function()
 	{
+		if(this.showingTipsId==2)this.showTips(0);
+		if(this.showingTipsId==4)this.showTips(0);
+		if(this.showingTipsId==6)this.showTips(0);
+
 		_gameLayer.level++;
 		cc.audioEngine.playEffect("res/music/level_up.mp3");
 		this.runAction(new cc.Sequence(new cc.DelayTime(3),new cc.CallFunc(function(){
@@ -821,6 +845,7 @@ var GameLayer = cc.Layer.extend({
     },
     gameOver:function()
     {
+    	this.showTips(7);
     	this.untouch = true;
 
 		for(var i=0;i<BOARD_SIZE.width;i++)
@@ -838,6 +863,7 @@ var GameLayer = cc.Layer.extend({
     {
     	this.addChild(new OverLayer(this));
     	this.hideBars();
+    	this.showTips(0);
     },
     showHint:function()
     {
@@ -879,7 +905,37 @@ var GameLayer = cc.Layer.extend({
     				this.spriteArray[i][j].addChild(hintTag);
     			}
 			}
-    }
+    },
+	showTips:function(type){
+		this.showingTipsId = type;
+		if(this.tipsSprite!=null)
+		{
+			this.tipsSprite.runAction(new cc.Sequence(new cc.EaseBackOut(new cc.ScaleTo(0.3,1.1)),new cc.CallFunc(this.tipsSprite.removeFromParent,this.tipsSprite)));
+		}
+		switch(type){
+			case 0:
+				this.tipsSprite = null;
+				return;
+			case 1:this.tipsSprite = new cc.Sprite("res/tips1.png");
+				break;
+			case 2:this.tipsSprite = new cc.Sprite("res/tips2.png");
+				break;
+			case 3:this.tipsSprite = new cc.Sprite("res/tips3.png");
+				break;
+			case 4:this.tipsSprite = new cc.Sprite("res/tips4.png");
+				break;
+			case 5:this.tipsSprite = new cc.Sprite("res/tips6.png");
+				break;
+			case 6:this.tipsSprite = new cc.Sprite("res/tips5.png");
+				break;
+			case 7:this.tipsSprite = new cc.Sprite("res/tips7.png");
+				break;
+		}
+		this.tipsSprite.setOpacity(0);
+		this.tipsSprite.runAction(new cc.Sequence(new cc.DelayTime(1),new cc.Repeat(new cc.Sequence(new cc.FadeTo(0.5,255),new cc.FadeTo(0.5,128)),4),new cc.FadeTo(0.5,0)));
+		this.tipsSprite.setPosition(540,230);
+		this.addChild(this.tipsSprite);
+	}
 });
 
 var Bean = cc.Sprite.extend({
@@ -989,6 +1045,11 @@ var IceBlock = cc.Node.extend({
 	},
 	hit:function()
 	{
+		if(_gameLayer.showingTipsId==3)
+		{
+			_gameLayer.showTips(4);
+		}
+
 		if(this.item==-2)
 		{
 			this.time = 0;
@@ -1038,6 +1099,11 @@ var IceBlock = cc.Node.extend({
 			_gameLayer.beansArray[this.cx][this.cy] = 0;
 			_gameLayer.getCombo();
 			_gameLayer.fillBoard();
+
+			if(_gameLayer.showingTipsId==5)
+			{
+				_gameLayer.showTips(6);
+			}
 		}
 		cc.audioEngine.playEffect("res/music/bomb.mp3");
 
@@ -1063,6 +1129,11 @@ var IceBlock = cc.Node.extend({
 			_gameLayer.boardNode.addChild(coinParticle);
 
 			this.removeFromParent();
+
+			if(_gameLayer.showingTipsId==4)
+			{
+				_gameLayer.showTips(0);
+			}
 		}
 	},
 	explore:function()

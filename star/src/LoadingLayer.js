@@ -131,7 +131,7 @@ var LoadingLayer = cc.Layer.extend({
 
 		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.FadeTo(1,172),new cc.DelayTime(46),new cc.FadeTo(27,0),new cc.DelayTime(20))));
 
-		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(74,cc.p(-2000,0)),new cc.MoveBy(0,cc.p(2000,0),new cc.DelayTime(20)))));
+		cloud4.runAction(new cc.RepeatForever(new cc.Sequence(new cc.DelayTime(1),new cc.MoveBy(14,cc.p(-400,0)),new cc.MoveBy(0,cc.p(2000,0),new cc.DelayTime(20)))));
 
 		this.addChild(cloud4);
 

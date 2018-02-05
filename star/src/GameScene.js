@@ -14,7 +14,6 @@ var GameScene = cc.Scene.extend({
 		{
 			_gameScene.adaptScreen();
 		}
-
 		
 		this.addChild(new LoadingLayer());
 

@@ -1,6 +1,19 @@
 var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http).listen(8808);
+
+var https=require('https');
+var fs=require('fs');
+var keypath='x/ssl.key';
+var certpath='x/ssl.crt';
+ 
+var options = {
+  key: fs.readFileSync(keypath),
+  cert: fs.readFileSync(certpath),
+};
+ 
+ 
+var server = https.createServer(options, function () {});
+
+var io = require('socket.io')(server);
 
 var GameService = require('./GameService');
 var gameService = new GameService();
@@ -16,7 +29,4 @@ io.on('connection', function(client){
 	});
 });
 
-
-http.listen(18080, function(){
-    console.log('listening on *:18080');
-});
+server.listen(4431,"127.0.0.1");
